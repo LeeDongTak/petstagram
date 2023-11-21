@@ -1,8 +1,12 @@
 import React from 'react'
-
+import Editor from './Editor'
+import GlobalStyle from '../styled/GlobalStyle';
 function Home() {
   return (
-    <div>Home</div>
+    <div>
+      <GlobalStyle/>
+      <Editor></Editor>
+    </div>
   )
 }
 
