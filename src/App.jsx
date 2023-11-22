@@ -1,7 +1,6 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Router from "./page/Router";
-import GlobalStyle from "./styled/GlobalStyle";
+import './App.css';
+import Router from './page/Router';
+import GlobalStyle from './styled/GlobalStyle';
 
 function App() {
   return (
