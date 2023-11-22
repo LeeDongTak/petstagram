@@ -1,13 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// Styled-Components
 const HeaderContainer = styled.div`
   width: 100%;
-  padding: 1rem 3rem;
+  padding: 1rem 21rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: white;
+
+  @media screen and (max-width: 1400px) {
+    padding: 1rem 4rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem 1rem;
+  }
 `;
 
 const Logo = styled.div`
@@ -22,13 +31,16 @@ const MenuContainer = styled.div`
   justify-content: space-between;
   gap: 3.6rem;
 
+  // 768px 이하 반응형
   @media screen and (max-width: 768px) {
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
-    padding: 1rem 3rem;
-    gap: 0;
+    padding: 1rem 1.65rem;
+    gap: 1rem;
+    background-color: #f6f6f6;
+    z-index: 1;
   }
 `;
 
@@ -56,6 +68,8 @@ const MenuItem = styled.div`
       width: 100%;
     }
   }
+
+  // 768px 이하 반응형
   @media screen and (max-width: 768px) {
     &:hover {
       &::after {
@@ -83,12 +97,14 @@ const Button = styled.button.attrs((props) => ({
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
+  // props에 따른 border, bg-color, color 변경
   border: ${(props) => (props.$bgColor === 'Log in' ? '1px solid var(--primary-color)' : '1px solid white')};
 
   background-color: ${(props) => (props.$bgColor === 'Log in' ? 'transparent' : 'var(--primary-color)')};
 
   color: ${(props) => (props.$bgColor === 'Log in' ? 'var(--primary-color)' : 'white')};
 
+  // hover 시 props에 따른 border, bg-color, color 변경
   &:hover {
     background-color: ${(props) => (props.$bgColor === 'Log in' ? 'var(--primary-color)' : 'transparent')};
     color: ${(props) => (props.$bgColor === 'Log in' ? 'white' : 'var(--primary-color)')};
@@ -96,14 +112,16 @@ const Button = styled.button.attrs((props) => ({
   }
 `;
 
+// Styled-Components 반복 생성 시 사용하는 변수
 const menu = ['Features', 'Pricing', 'Community', 'Support'];
 const buttons = ['Log in', 'Register'];
 
+// Main Component
 export default function Header() {
   return (
     <HeaderContainer>
       <Logo>
-        <h1>petstagram</h1>
+        <img width="100px" src="/assets/images/logo.png" alt="" />
       </Logo>
       <MenuContainer>
         {menu.map((menu) => (

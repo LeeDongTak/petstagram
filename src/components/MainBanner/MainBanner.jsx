@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// Styled-Components
 const BannerContainer = styled.div`
   width: 100%;
 `;
@@ -75,6 +76,7 @@ const BannerButton = styled.button.attrs((props) => ({
   }
 `;
 
+// Styled-Components 반복 생성 시 사용하는 변수
 const campaign = [
   {
     title: '반려동물 생활백서',
@@ -83,6 +85,7 @@ const campaign = [
   }
 ];
 
+// Main Component
 export default function MainBanner() {
   return (
     <BannerContainer>
