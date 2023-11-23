@@ -39,7 +39,7 @@ const ProfileContainer = styled.div`
   flex-direction: column;
   border-right: 1px solid #ffb4a9;
   width: 55%;
-  padding: 5rem 1.25rem 0 1.25rem;
+  padding: 4rem 1.25rem 0 1.25rem;
   gap: 2rem;
 
   & button {
@@ -78,6 +78,7 @@ const OwnerInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  word-wrap: break-word;
 
   & h3 {
     font-size: 18px;
@@ -85,10 +86,15 @@ const OwnerInfo = styled.div`
   }
 
   & p {
-    width: 250px;
-    height: 50px;
+    background-color: #eee;
+    width: 300px;
+    height: fit-content;
+    max-height: 90px;
     overflow-y: scroll;
     font-size: 14px;
+    padding: 1rem;
+    border-radius: 9px;
+    line-height: 1rem;
   }
 `;
 
