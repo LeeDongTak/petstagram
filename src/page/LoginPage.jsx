@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { app } from '../fireBase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth, signOut } from 'firebase/auth';
 import Swal from 'sweetalert2';
+import tokenStorage from '../util/storage';
 
 function LoginPage() {
+  const TokenStorage = new tokenStorage();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailValid, setEmailValid] = useState(false);
@@ -57,6 +60,7 @@ function LoginPage() {
           imageWidth: 120
         });
         navi('/');
+        TokenStorage.saveToken(유저인증토큰객체.user.accessToken);
       })
       .catch((err) => {
         Swal.fire({
