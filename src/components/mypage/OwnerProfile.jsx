@@ -33,13 +33,14 @@ function OwnerProfile({ username }) {
 
 export default OwnerProfile;
 
+// STYLED-COMPONENTS
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ffb4a9;
-  width: 250px;
-  padding: 55px;
-  gap: 30px;
+  width: 55%;
+  padding: 4rem 1.25rem 0 1.25rem;
+  gap: 2rem;
 
   & button {
     padding: 10px 0;
@@ -48,6 +49,12 @@ const ProfileContainer = styled.div`
     color: #fff;
     border-radius: 3px;
     cursor: pointer;
+  }
+  @media screen and (max-width: 960px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ffb4a9;
+    padding: 1.25rem;
   }
 `;
 
@@ -58,10 +65,11 @@ const OwnerProfileContainer = styled.div`
   align-items: center;
 
   & img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 150px;
     margin-bottom: 8px;
+    object-fit: cover;
   }
 `;
 
@@ -70,6 +78,7 @@ const OwnerInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  word-wrap: break-word;
 
   & h3 {
     font-size: 18px;
@@ -77,7 +86,15 @@ const OwnerInfo = styled.div`
   }
 
   & p {
+    background-color: #eee;
+    width: 300px;
+    height: fit-content;
+    max-height: 90px;
+    overflow-y: scroll;
     font-size: 14px;
+    padding: 1rem;
+    border-radius: 9px;
+    line-height: 1rem;
   }
 `;
 

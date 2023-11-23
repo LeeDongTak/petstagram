@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tokenStorage from '../../util/storage';
+import { auth } from '../../fireBase';
+import authStorage from '../../util/authUser';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -114,54 +116,120 @@ const Button = styled.button.attrs((props) => ({
   }
 `;
 
+const UserContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+`;
+
+const UserIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 30px;
+  background-color: #5b5b5b;
+  color: white;
+  cursor: pointer;
+  position: relative;
+`;
+
+const UserName = styled.h3`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: larger;
+`;
+
 // Main Component
 export default function Header() {
+  // localStorage의 사용자 email, UID를 가져오는 것
+  const authHandler = new authStorage();
+
+  // 현재 로그인 유저 email, uid
+  const [curUserEmail, setCurUserEmail] = useState('');
+  const [curUserUid, setCurUserUid] = useState('');
+
+  // Navigate Hook
   const navi = useNavigate();
+
+  // Token을 가졌나 안 가졌나 확인
   const [hasToken, setHasToken] = useState(false);
-  const [checkStatus, setCheckStatus] = useState(false);
 
   // Styled-Components 반복 생성 시 사용하는 변수
   const menu = ['Features', 'Pricing', 'Community', 'Support'];
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
+  //////////////////////////////////////////////////////////////////
+  // localStorage의 데이터를 늦게 가져와서 UI가 안 바뀝니다. (미해결 문제)
+  //////////////////////////////////////////////////////////////////
   useEffect(() => {
     localStorage.getItem('token') !== null && setHasToken(true);
-  }, [checkStatus]);
+    setCurUserEmail(authHandler.getEmail());
+    setCurUserUid(authHandler.getUid());
+  }, []);
 
+  // 로그인 페이지로~
   const goLogin = (e) => {
     e.target.innerText === 'Log in' && navi('/login');
     e.target.innerText === 'Register' && navi('/register');
   };
 
+  // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
   const logOut = () => {
     new tokenStorage().clearToken();
     setHasToken(false);
+    authHandler.clearEmail();
+    authHandler.clearUid();
+    navi('/', { replace: true });
   };
 
-  return (
-    <HeaderContainer>
-      <Logo>
-        <img width="100px" src="/assets/images/logo.png" alt="" />
-      </Logo>
-      <MenuContainer>
-        {menu.map((menu) => (
-          <MenuItem key={menu}>{menu}</MenuItem>
-        ))}
-      </MenuContainer>
-      <ButtonContainer>
-        {hasToken === true
-          ? loginedButton.map((text) => (
-              <Button onClick={() => logOut()} key={text} $bgColor={text}>
-                {text}
-              </Button>
-            ))
-          : buttons.map((text) => (
-              <Button onClick={(e) => goLogin(e)} key={text} $bgColor={text}>
-                {text}
-              </Button>
-            ))}
-      </ButtonContainer>
-    </HeaderContainer>
-  );
+  // 마이페이지로~
+  const goMyPage = () => {
+    navi(`/mypage/${curUserUid}`);
+  };
+
+  // 홈으로~
+  const goHome = () => {
+    navi('/');
+  };
+
+  // user email을 받아와 반환합니다
+  const returnUserName = () => {
+    return auth.currentUser?.email;
+  };
+
+  // curUserEmail이 비어있지 않다면 Header의 UI가 나옵니다
+  if (curUserEmail !== '') {
+    return (
+      <HeaderContainer>
+        <Logo onClick={() => goHome()}>
+          <img width="100px" src="/assets/images/logo.png" alt="" />
+        </Logo>
+        <MenuContainer>
+          {menu.map((menu) => (
+            <MenuItem key={menu}>{menu}</MenuItem>
+          ))}
+        </MenuContainer>
+        <ButtonContainer>
+          {hasToken === true
+            ? loginedButton.map((text, i) => (
+                <UserContainer key={i}>
+                  <Button onClick={() => logOut()} key={text} $bgColor={text}>
+                    {text}
+                  </Button>
+                  <UserIcon onClick={() => goMyPage()}>
+                    <UserName>{returnUserName()?.charAt(0)}</UserName>
+                  </UserIcon>
+                </UserContainer>
+              ))
+            : buttons.map((text) => (
+                <Button onClick={(e) => goLogin(e)} key={text} $bgColor={text}>
+                  {text}
+                </Button>
+              ))}
+        </ButtonContainer>
+      </HeaderContainer>
+    );
+  }
 }

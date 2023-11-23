@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { app } from '../fireBase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth, signOut } from 'firebase/auth';
 import Swal from 'sweetalert2';
+import { FadeAni } from './MyPage';
+import authStorage from '../util/authUser';
 import tokenStorage from '../util/storage';
 
 function LoginPage() {
-  const TokenStorage = new tokenStorage();
+  const userInfoHandler = new authStorage();
+  const tokenHandler = new tokenStorage();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,10 +61,17 @@ function LoginPage() {
           width: '28rem',
           imageUrl: '/assets/img/logo.png',
           imageWidth: 120
+        }).then((value) => {
+          if (value.isConfirmed === true) {
+            tokenHandler.saveToken(유저인증토큰객체.user.accessToken);
+            userInfoHandler.saveUid(유저인증토큰객체.user.uid);
+            userInfoHandler.saveEmail(유저인증토큰객체.user.email);
+            navi('/');
+            window.location.reload();
+          }
         });
-        navi('/');
-        TokenStorage.saveToken(유저인증토큰객체.user.accessToken);
       })
+
       .catch((err) => {
         Swal.fire({
           title: '<span style="font-size: 18px;">이메일 또는 비밀번호가 유효하지 않습니다.</span>',
@@ -182,6 +192,7 @@ const Page = styled.div`
   margin: 0 auto;
   padding: 0 20px;
   overflow: hidden;
+  animation: ${FadeAni} 0.5s forwards;
   @media screen and (max-width: 600px) {
     width: 90%;
     padding: 10px;
