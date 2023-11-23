@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
 import Tabs from '../components/mypage/Tabs';
 import OwnerProfile from '../components/mypage/OwnerProfile';
 import PetProfile from '../components/mypage/PetProfile';
 import MyPosts from '../components/mypage/MyPosts';
 import { useEffect } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
-import { auth, db } from '../fireBase';
+import { db } from '../fireBase';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import authStorage from '../util/authUser';
 
 function MyPage() {
+  // localStorage의 사용자 email, UID를 가져오는 것
+  const authHandler = new authStorage();
+
+  // URL 파라미터
   const { id } = useParams();
+
+  // STATES
   const [post, setPost] = useState([]);
   const [username, setUserName] = useState(''); // 프로필 사용자 이름
 
@@ -37,13 +43,13 @@ function MyPage() {
     fetchData();
   }, []);
 
-  const filteredData = post.filter((post) => post.uid === id);
+  // 게시물을 현재 사용자의 id와 같은 것들로 보여주기 위한 filter
+  const filteredData = post?.filter((post) => post.id === id);
 
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const userData = auth.currentUser;
-      const email = userData.email;
+      const email = authHandler.getEmail();
       setUserName(email);
     };
     fetchUserInfo();
@@ -51,50 +57,85 @@ function MyPage() {
 
   return (
     <>
-      {/* navbar 공통컴포넌트 */}
-      <Navbar></Navbar>
       <Tabs onClickTab={onActiveTab} activeTab={activeTab}></Tabs>
-
-      {activeTab === '프로필' ? (
-        <ProfileContainer>
-          <OwnerProfile username={username}></OwnerProfile>
-          <PetProfileContainer>
-            <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
-          </PetProfileContainer>
-        </ProfileContainer>
-      ) : (
-        filteredData.map((item) => {
-          return (
-            <MyPosts
-              title={item.title}
-              content={item.content}
-              uid={item.uid}
-              postId={item.id}
-              setPost={setPost}
-            ></MyPosts>
-          );
-        })
-      )}
+      <MyPageContainer>
+        {activeTab === '프로필' ? (
+          <ProfileContainer>
+            <OwnerProfile username={username}></OwnerProfile>
+            <PetProfileContainer>
+              <PetProfile></PetProfile>
+              <PetProfile></PetProfile>
+              <PetProfile></PetProfile>
+              <PetProfile></PetProfile>
+            </PetProfileContainer>
+          </ProfileContainer>
+        ) : (
+          filteredData.map((item) => {
+            return (
+              <MyPosts
+                title={item.title}
+                content={item.content}
+                uid={item.uid}
+                postId={item.id}
+                setPost={setPost}
+              ></MyPosts>
+            );
+          })
+        )}
+      </MyPageContainer>
     </>
   );
 }
 
 export default MyPage;
 
+const MyPageContainer = styled.div`
+  width: 100%;
+  padding: 0 15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media screen and (max-width: 1400px) {
+    padding: 0 6rem;
+  }
+  @media screen and (max-width: 768px) {
+    padding: 0 1.25rem;
+  }
+`;
+
+export const FadeAni = keyframes`
+  from {
+    transform: translateY(10%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+`;
+
 const ProfileContainer = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 1rem;
+  animation: ${FadeAni} 0.5s forwards;
+
+  @media screen and (max-width: 960px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const PetProfileContainer = styled.div`
+  width: 100%;
+  height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 1.25rem;
+  overflow-y: scroll;
 `;
 
 // ! 목욜, 금욜 투두

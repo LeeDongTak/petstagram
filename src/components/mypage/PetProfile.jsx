@@ -25,20 +25,26 @@ function PetProfile() {
 
 export default PetProfile;
 
+// STYLED-COMPONENTS
 const PetProfileContainer = styled.div`
   border: 1px solid #000;
   display: flex;
-  justify-content: space-around;
+  margin: auto;
   align-items: center;
-  padding: 15px;
-  gap: 10px;
-  width: 800px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 900px;
   border-radius: 10px;
+  border: 1px solid black;
 
   & img {
-    width: 200px;
-    height: 110px;
+    width: 120px;
+    height: 135px;
     border-radius: 50%;
+    flex-basis: 20%;
+  }
+  @media screen and (max-width: 768px) {
+    padding: 0.25rem 0.65rem;
   }
 `;
 
@@ -46,6 +52,8 @@ const PetInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
+  padding: 1rem;
 `;
 
 const PetNameAgeGender = styled.h3`
