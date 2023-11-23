@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const ProductSection = styled.div`
@@ -13,7 +14,10 @@ const ProductContainer = styled.div`
   }
 `;
 
-const ProductTitle = styled.h1`
+const ProductTitle = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
   width: fit-content;
   font-size: 2rem;
 `;
@@ -80,14 +84,43 @@ const ItemPrice = styled.div`
   font-weight: 600;
 `;
 
+const ToShop = styled.button.attrs((props) => ({
+  type: 'button'
+}))`
+  width: fit-content;
+  height: fit-content;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  &:hover {
+    color: var(--primary-color);
+    outline: none;
+    border: none;
+  }
+`;
+
 export default function Products() {
+  // Hook
+  const navi = useNavigate();
+
+  // 컴포넌트 반복생성을 위한 임의의 배열
   const arr = [1, 2, 3, 4, 5, 6, 7, 8];
 
+  // FUNCTIONS
+  const goShop = () => {
+    navi('/shop');
+    window.scrollTo({ top: true });
+  };
   return (
     <>
       <ProductSection>
         <ProductContainer>
-          <ProductTitle>Products</ProductTitle>
+          <ProductTitle>
+            Products
+            <ToShop onClick={() => goShop()}>제품 더 보기</ToShop>
+          </ProductTitle>
           <ProductGrid>
             {arr.map((el, i) => {
               return (
