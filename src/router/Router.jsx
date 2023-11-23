@@ -4,6 +4,7 @@ import Home from '../page/Home';
 import MyPage from '../page/MyPage';
 import LoginPage from '../page/LoginPage';
 import Header from '../components/Header/Header';
+import Shop from '../page/Shop';
 
 function Router() {
   return (
@@ -13,6 +14,8 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/mypage/:id" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/shop" element={<Shop />} />
+        {/* <Route path="/shop/:productid" element={<Shop />} /> */}
       </Routes>
     </BrowserRouter>
   );
