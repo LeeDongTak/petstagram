@@ -43,8 +43,23 @@ export const fetchData = async()=>{
 const storage = getStorage(app);
 
 export const uploadImage = async (file) => {
-  const storageRef = ref(storage, `images/${file.name}`);
-  await uploadString(storageRef, file, 'data_url');
-  const downloadURL = await getDownloadURL(storageRef);
-  return downloadURL;
+  try {
+    const storageRef = ref(storage, `images/${file.name}`);
+    const dataUrl = await readFileAsDataURL(file);
+    await uploadString(storageRef, dataUrl, 'data_url');
+    const downloadURL = await getDownloadURL(storageRef);
+    console.log('Image uploaded successfully. Download URL:', downloadURL);
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return null;
+  }
+};
+const readFileAsDataURL = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => resolve(event.target.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
 };

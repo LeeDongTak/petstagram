@@ -1,11 +1,13 @@
 import React from 'react'
 import GlobalStyle from '../styled/GlobalStyle';
-import Editor from './Editor'
+import EditorBox from './Editor'
+import ContentsViewer from './Viewer'
 function Home() {
   return (
     <div >
       {/* <GlobalStyle/> */}
-      <Editor></Editor>
+      <EditorBox></EditorBox>
+      <ContentsViewer></ContentsViewer>
     </div>
   )
 }
