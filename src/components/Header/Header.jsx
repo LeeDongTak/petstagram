@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import tokenStorage from '../../util/storage';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -112,12 +114,31 @@ const Button = styled.button.attrs((props) => ({
   }
 `;
 
-// Styled-Components 반복 생성 시 사용하는 변수
-const menu = ['Features', 'Pricing', 'Community', 'Support'];
-const buttons = ['Log in', 'Register'];
-
 // Main Component
 export default function Header() {
+  const navi = useNavigate();
+  const [hasToken, setHasToken] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(false);
+
+  // Styled-Components 반복 생성 시 사용하는 변수
+  const menu = ['Features', 'Pricing', 'Community', 'Support'];
+  const buttons = ['Log in', 'Register'];
+  const loginedButton = ['Log Out'];
+
+  useEffect(() => {
+    localStorage.getItem('token') !== null && setHasToken(true);
+  }, [checkStatus]);
+
+  const goLogin = (e) => {
+    e.target.innerText === 'Log in' && navi('/login');
+    e.target.innerText === 'Register' && navi('/register');
+  };
+
+  const logOut = () => {
+    new tokenStorage().clearToken();
+    setHasToken(false);
+  };
+
   return (
     <HeaderContainer>
       <Logo>
@@ -129,11 +150,17 @@ export default function Header() {
         ))}
       </MenuContainer>
       <ButtonContainer>
-        {buttons.map((text) => (
-          <Button key={text} $bgColor={text}>
-            {text}
-          </Button>
-        ))}
+        {hasToken === true
+          ? loginedButton.map((text) => (
+              <Button onClick={() => logOut()} key={text} $bgColor={text}>
+                {text}
+              </Button>
+            ))
+          : buttons.map((text) => (
+              <Button onClick={(e) => goLogin(e)} key={text} $bgColor={text}>
+                {text}
+              </Button>
+            ))}
       </ButtonContainer>
     </HeaderContainer>
   );
