@@ -1,9 +1,9 @@
-import { createStore } from "redux";
+import { legacy_createStore as createStore } from "redux";
 import { combineReducers } from "redux";
-import dummyReducer from "../modules/dummy";
+import { posts } from "../modules/posts";
 
 const rootreducer = combineReducers({
-    dummyReducer
+  posts
 })
 const store = createStore(rootreducer);
 
