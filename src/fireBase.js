@@ -6,11 +6,12 @@ import { config } from "./config";
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
-
-
-// Your web app's Firebase configuration
 const firebaseConfig = config.db.dbConfig
+
 export const app = initializeApp(firebaseConfig);
+// Your web app's Firebase configuration
+
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
