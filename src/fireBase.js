@@ -24,7 +24,8 @@ export const saveData= async (title,content)=>{
       title,
       content
     });
-    console.log('id',docRef.id)
+    console.log('제목,내용 저장',docRef.id);
+    
   }catch(e){
     console.log('실패')
     return null;

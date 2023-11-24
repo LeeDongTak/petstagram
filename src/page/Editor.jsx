@@ -13,6 +13,7 @@ import { useRef } from 'react';
 const PostingTitle = styled.div`
 /* 상단 제목 입력부분 스타일 */
     input{
+    padding: 10px;
     display: block;
     width: 100%;
     height: 56px;
@@ -24,11 +25,20 @@ const PostingTitle = styled.div`
     line-height: 40px;
     overflow: hidden;
     letter-spacing: -0.4px;
+    
 }
   input:focus{
     border : 2px solid #FF2E00;
   }`
-  
+const PostSubnmit = styled.button`
+  margin-top: 3px;
+  margin-left: 150px;
+  width: 150px;
+  border: 2px solid #FF2E00;
+  background-color: transparent;
+
+`
+
 function EditorBox() {
   const editorRef =useRef();
   const onChange= ()=>{
@@ -43,15 +53,17 @@ function EditorBox() {
   };
   const onSaveData = async () => {
     const data = editorRef.current.getInstance().getHTML();
+
     // 서버로 데이터 전송
     await saveData(editTitle, data);
   };
   const [editTitle, editSetTitle] = useState('');
   return (
     <div>
-      <PostingTitle><input type="text" value={editTitle}   onChange={(e) => {editSetTitle(e.target.value)}}/></PostingTitle>
+      <PostingTitle><input type="text" value={editTitle} placeholder='제목입력 해주세요!'  onChange={(e) => {editSetTitle(e.target.value)}}/></PostingTitle>
       <Editor
-        initialValue="hello react editor world!"
+        placeholder='내용을 입력해주세요'
+        initialValue="와! 에디터 텍스트!"
         previewStyle="vertical"
         height="600px"
         initialEditType="wysiwyg"
@@ -64,7 +76,7 @@ function EditorBox() {
           addImageBlobHook: onUploadImage
         }}
       />
-      <div><button onClick={onSaveData}>전송</button></div>
+      <div><PostSubnmit onClick={onSaveData}>전송</PostSubnmit></div>
       
       </div>
   );
