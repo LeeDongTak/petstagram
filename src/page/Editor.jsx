@@ -7,12 +7,16 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
-import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetEditor, setContent,setTitle, } from '../redux/modules/actions';
+
+
 
 const PostingTitle = styled.div`
 /* 상단 제목 입력부분 스타일 */
     input{
+    box-sizing: border-box;
     display: block;
     width: 100%;
     height: 56px;
@@ -26,13 +30,36 @@ const PostingTitle = styled.div`
     letter-spacing: -0.4px;
 }
   input:focus{
-    border : 2px solid #FF2E00;
+    border : 1px solid #FF2E00; 
+  }
+  img{
+    width: 30%;
+  height: 30%;
+  text-align: center;
   }`
-  
+const EditContainer = styled.div`
+
+margin:  auto;
+margin-top: 150px;
+max-width: 700px;
+border : 1px solid black;
+`
+const EditBtn = styled.button`
+background-color:#FF2E00 ;
+margin-top: 5px;
+color: white;
+border: none;
+font-size: 20px;
+margin-left: 630px;
+
+`
 function EditorBox() {
+  const dispatch = useDispatch();
+  const editorState = useSelector((state)=>state)
   const editorRef =useRef();
   const onChange= ()=>{
     const data = editorRef.current.getInstance().getHTML();
+    dispatch(setContent(data));
     console.log(data);
   }
   const onUploadImage = async (blob, callback) => {
@@ -42,16 +69,23 @@ function EditorBox() {
     return false;
   };
   const onSaveData = async () => {
-    const data = editorRef.current.getInstance().getHTML();
-    // 서버로 데이터 전송
-    await saveData(editTitle, data);
+    await saveData(editorState.editId,editorState.editTitle, editorState.editorData);
+    dispatch(resetEditor());
+    console.log('완료')
+    // const data = editorRef.current.getInstance().getHTML();
+    
+    // // 서버로 데이터 전송
+    // await saveData(editTitle, data);
   };
   const [editTitle, editSetTitle] = useState('');
   return (
     <div>
-      <PostingTitle><input type="text" value={editTitle}   onChange={(e) => {editSetTitle(e.target.value)}}/></PostingTitle>
+      <EditContainer>
+      <PostingTitle><input type="text" value={editorState.editTitle} 
+       placeholder='제목입력하세요' onChange={(e) => dispatch(setTitle(e.target.value))}/></PostingTitle>
       <Editor
-        initialValue="hello react editor world!"
+        initialValue=""
+        placeholder='내용 입력하세요'
         previewStyle="vertical"
         height="600px"
         initialEditType="wysiwyg"
@@ -64,8 +98,9 @@ function EditorBox() {
           addImageBlobHook: onUploadImage
         }}
       />
-      <div><button onClick={onSaveData}>전송</button></div>
-      
+      <div><EditBtn onClick={onSaveData}>완 료</EditBtn></div>
+      </EditContainer>
+
       </div>
   );
 }
@@ -199,10 +234,7 @@ export default EditorBox;
 //             console.log( 'Blur.', editor );
 //             editor.ui.view.editable.element.style.border = 'none';
 //         } }
-//         onFocus={ ( event, editor ) => {
-//             console.log( 'Focus.', editor );
-//             editor.ui.view.editable.element.style.border = '2px solid #FF2E00';
-//         } }
+// 
 //     />
 
 // </StyledEditorContainer>

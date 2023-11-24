@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc,getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 
 
@@ -18,9 +18,10 @@ const app = initializeApp(firebaseConfig);
 const db= getFirestore(app);
 
 
-export const saveData= async (title,content)=>{
+export const saveData= async (id,title,content)=>{
   try{
     const docRef =await addDoc(collection(db,"posts"),{
+      id,
       title,
       content
     });
@@ -32,7 +33,7 @@ export const saveData= async (title,content)=>{
 };
 
 export const fetchData = async()=>{
-  const snapshot =await getDocs(collection(db,"post"));
+  const snapshot =await getDocs(collection(db,"posts"));
   const posts=[];
   snapshot.forEach((doc)=>{
     posts.push({id:doc.id,...doc.data()});
@@ -48,10 +49,10 @@ export const uploadImage = async (file) => {
     const dataUrl = await readFileAsDataURL(file);
     await uploadString(storageRef, dataUrl, 'data_url');
     const downloadURL = await getDownloadURL(storageRef);
-    console.log('Image uploaded successfully. Download URL:', downloadURL);
+    console.log('Image URL:', downloadURL);
     return downloadURL;
   } catch (error) {
-    console.error('Error uploading image:', error);
+    console.error('에러', error);
     return null;
   }
 };
@@ -62,4 +63,21 @@ const readFileAsDataURL = (file) => {
     reader.onerror = (error) => reject(error);
     reader.readAsDataURL(file);
   });
+};
+export const fetchSinglePost = async (postId) => {
+  try {
+    const docRef = doc(db, "posts", postId);
+    const docSnap = await getDocs(docRef);
+    
+    if (docSnap.exists()) {
+      return docSnap.data();
+
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error('에러실패', error);
+    return null;
+  }
 };
