@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import tokenStorage from '../../util/storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { remove_user } from '../../redux/modules/users';
+import bcrypt, { hash } from 'bcryptjs';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -167,11 +168,12 @@ export default function Header() {
       setHasToken(true);
     }
   }, [reduxUser]);
+  console.log(curUserInfo);
 
   // 로그인 페이지로~
   const goLogin = (e) => {
     e.target.innerText === 'Log in' && navi('/login');
-    e.target.innerText === 'Register' && navi('/register');
+    e.target.innerText === 'Register' && navi('/signup');
   };
 
   // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
@@ -185,7 +187,8 @@ export default function Header() {
 
   // 마이페이지로~
   const goMyPage = () => {
-    navi(`/mypage/${curUserInfo.current.uid}`);
+    const compared = bcrypt.compareSync(curUserInfo.current.uid, '');
+    navi(`/mypage/${compared}`);
   };
 
   // 홈으로~

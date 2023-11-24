@@ -6,6 +6,8 @@ import LoginPage from '../page/LoginPage';
 import Header from '../components/Header/Header';
 import Shop from '../page/Shop';
 import Footer from '../components/Footer';
+import Signup from '../page/Signup';
+import AddProfile from '../page/AddProfile';
 
 function Router() {
   return (
@@ -16,6 +18,8 @@ function Router() {
         <Route path="/mypage/:id" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/addprofile/:id" element={<AddProfile />} />
         {/* <Route path="/shop/:productid" element={<Shop />} /> */}
       </Routes>
       <Footer />
