@@ -28,6 +28,7 @@ const PostingTitle = styled.div`
     line-height: 40px;
     overflow: hidden;
     letter-spacing: -0.4px;
+    
 }
   input:focus{
     border : 1px solid #FF2E00; 
