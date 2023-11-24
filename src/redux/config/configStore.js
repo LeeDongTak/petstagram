@@ -10,6 +10,8 @@ const rootreducer = combineReducers({
   signup,
   addprofile,
   addPetProfile,
+  posts,
+  users
 })
 
 const store = createStore(rootreducer)

@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { emailChage, passwordChage, passwordCheckChage, signupEvent } from '../redux/modules/signup';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
@@ -11,9 +10,9 @@ function Signup() {
   const navigate = useNavigate();
   const emailRef = useRef('');
 
-  useEffect(()=>{
-    emailRef.current.focus()
-  },[])
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
   const emailHandler = (e) => {
     dispatch(emailChage(e.target.value));
   };

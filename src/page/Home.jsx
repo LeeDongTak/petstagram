@@ -1,5 +1,3 @@
-import React, { useEffect } from 'react';
-import { app } from '../fireBase';
 import React from 'react';
 import styled from 'styled-components';
 import MainBanner from '../components/MainBanner/MainBanner';

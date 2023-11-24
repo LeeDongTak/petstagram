@@ -51,7 +51,7 @@ function MyPage() {
   console.log(post);
 
   // 게시물을 현재 사용자의 id와 같은 것들로 보여주기 위한 filter
-  const filteredData = post?.filter((post) => post.id === id);
+  const filteredData = post?.filter((post) => post.uid === id);
   console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
@@ -98,6 +98,7 @@ function MyPage() {
 export default MyPage;
 
 const MyPageContainer = styled.div`
+  font-size: 1.25rem;
   width: 100%;
   padding: 0 15rem;
   display: flex;
