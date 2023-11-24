@@ -28,9 +28,7 @@ const GlobalStyle = createGlobalStyle`
         /* font: inherit; 폰트 적용을 위해 제거 */
         vertical-align: baseline;
     }
-    html{
-        font-size: 12px;
-    }
+    
 
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, 

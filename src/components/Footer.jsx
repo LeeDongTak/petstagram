@@ -29,11 +29,10 @@ export default Footer;
 //푸터
 const Footerstyle = styled.footer`
   width: 100%;
-  height: 150px;
   border-top: 1px solid #c4c4c4;
-  padding: 20px;
+  padding: 0.9rem 1rem;
   color: #808080;
   font-size: 12px;
-  margin-top: 30px;
   line-height: 1.2;
+  letter-spacing: 0.1rem;
 `;

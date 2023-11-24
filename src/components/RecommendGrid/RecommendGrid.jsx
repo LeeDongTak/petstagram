@@ -124,7 +124,7 @@ const MoreButton = styled.button.attrs((props) => ({
 export default function RecommendGrid({ filteredData }) {
   return (
     <>
-      {filteredData.map((post) => {
+      {filteredData?.map((post) => {
         return (
           <RecommendPostBox key={post.createdAt.nanoseconds}>
             <RecommendTitle>{post.title}</RecommendTitle>

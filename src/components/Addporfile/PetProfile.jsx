@@ -46,7 +46,9 @@ function PetProfile() {
         <StAddPetBtn onClick={addPetModalHandler}>반려동물 등록</StAddPetBtn>
       </StPetPorfileWrap>
       <StPetCardWarp>
-        {addPetProfile.petData.map((item, index) => {
+
+        {addPetProfile?.petData?.map((item, index) => {
+
           return <PetCard petData={item} index={index} key={item.petId} />;
         })}
       </StPetCardWarp>
