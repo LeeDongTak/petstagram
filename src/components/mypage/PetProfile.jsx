@@ -26,6 +26,7 @@ function PetProfile() {
 export default PetProfile;
 
 // STYLED-COMPONENTS
+
 const PetProfileContainer = styled.div`
   border: 1px solid #000;
   display: flex;

@@ -5,6 +5,7 @@ import MyPage from '../page/MyPage';
 import LoginPage from '../page/LoginPage';
 import Header from '../components/Header/Header';
 import Shop from '../page/Shop';
+import Footer from '../components/Footer';
 
 function Router() {
   return (
@@ -17,6 +18,7 @@ function Router() {
         <Route path="/shop" element={<Shop />} />
         {/* <Route path="/shop/:productid" element={<Shop />} /> */}
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

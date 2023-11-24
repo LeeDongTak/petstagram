@@ -1,4 +1,5 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -22,68 +23,6 @@ const ProductTitle = styled.div`
   font-size: 2rem;
 `;
 
-const ProductGrid = styled.div`
-  width: 100%;
-  display: grid;
-  margin-block: 2.25rem;
-  row-gap: 2.25rem;
-  column-gap: 1rem;
-  grid-template-columns: repeat(4, 1fr);
-  @media screen and (max-width: 1400px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media screen and (max-width: 960px) {
-    grid-template-columns: repeat(2, 1fr);
-    height: 500px;
-    overflow-y: scroll;
-  }
-  @media screen and (max-width: 500px) {
-    grid-template-columns: repeat(1, 1fr);
-  }
-`;
-
-const ProductItemContainer = styled.div`
-  width: fit-content;
-  padding: 1rem;
-  border-radius: 9px;
-  background-color: white;
-  cursor: pointer;
-  transform: scale(1);
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  &:hover {
-    transform: scale(1.02);
-  }
-
-  @media screen and (max-width: 500px) {
-    width: 100%;
-  }
-`;
-
-const ProductItemImg = styled.div`
-  width: 250px;
-  height: 250px;
-  background-image: url('https://placehold.co/200');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  border-radius: 9px;
-  @media screen and (max-width: 500px) {
-    width: 100%;
-  }
-`;
-
-const ItemTitle = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 0.65rem;
-`;
-
-const ItemPrice = styled.div`
-  width: 100%;
-  text-align: center;
-  font-weight: 600;
-`;
-
 const ToShop = styled.button.attrs((props) => ({
   type: 'button'
 }))`
@@ -101,12 +40,81 @@ const ToShop = styled.button.attrs((props) => ({
   }
 `;
 
+//프로덕트 랩
+const ShopWrap = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 0 auto;
+  padding: 0 20px;
+  margin-top: 30px;
+  @media screen and (max-width: 1400px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 90%;
+    padding: 10px;
+  }
+  @media screen and (max-width: 600px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
+//프로덕트 이미지
+const ProductImage = styled.img`
+  max-width: 100%; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
+  height: auto;
+  border-radius: 20px;
+`;
+
+//프로덕트 이름
+const ProductT = styled.div`
+  padding: 0 10px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  height: 30px;
+  line-height: 1.13;
+`;
+
+//가격 랩
+const PriceWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+//할인 가격
+const Price = styled.div`
+  padding: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-block: 1rem;
+`;
+//할인율
+const PriceRate = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff5036;
+  margin: 2px 0px 0px -5px;
+`;
+//정상가
+const RegularPrice = styled.div`
+  color: #aaa;
+  text-decoration: line-through;
+  padding: 0 10px;
+  font-size: 15px;
+  font-weight: bold;
+`;
+
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    axios.get('/data/products.json').then((data) => {
+      setProducts(data.data.products);
+    });
+  }, []);
+
   // Hook
   const navi = useNavigate();
-
-  // 컴포넌트 반복생성을 위한 임의의 배열
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8];
 
   // FUNCTIONS
   const goShop = () => {
@@ -121,17 +129,21 @@ export default function Products() {
             Products
             <ToShop onClick={() => goShop()}>제품 더 보기</ToShop>
           </ProductTitle>
-          <ProductGrid>
-            {arr.map((el, i) => {
-              return (
-                <ProductItemContainer key={i}>
-                  <ProductItemImg />
-                  <ItemTitle>{`제품 ${el}`}</ItemTitle>
-                  <ItemPrice>20,000 ￦</ItemPrice>
-                </ProductItemContainer>
-              );
-            })}
-          </ProductGrid>
+          <ShopWrap>
+            {products?.slice(0, 4).map((product) => (
+              <div key={product.id}>
+                <div>
+                  <ProductImage src={product.image} alt={product.name} />
+                </div>
+                <ProductT>{product.name}</ProductT>
+                <PriceWrap>
+                  <Price>{product.price}</Price>
+                  <PriceRate>{product.discountRate}</PriceRate>
+                </PriceWrap>
+                <RegularPrice>{product.RatePrice}</RegularPrice>
+              </div>
+            ))}
+          </ShopWrap>
         </ProductContainer>
       </ProductSection>
     </>

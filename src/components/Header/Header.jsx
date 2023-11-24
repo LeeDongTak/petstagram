@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tokenStorage from '../../util/storage';
-import { auth } from '../../fireBase';
-import authStorage from '../../util/authUser';
+import { useDispatch, useSelector } from 'react-redux';
+import { remove_user } from '../../redux/modules/users';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -142,12 +142,12 @@ const UserName = styled.h3`
 
 // Main Component
 export default function Header() {
-  // localStorage의 사용자 email, UID를 가져오는 것
-  const authHandler = new authStorage();
+  // Redux States
+  const reduxUser = useSelector((state) => state.users);
+  const dispatch = useDispatch();
 
   // 현재 로그인 유저 email, uid
-  const [curUserEmail, setCurUserEmail] = useState('');
-  const [curUserUid, setCurUserUid] = useState('');
+  const curUserInfo = useRef('');
 
   // Navigate Hook
   const navi = useNavigate();
@@ -160,14 +160,13 @@ export default function Header() {
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
-  //////////////////////////////////////////////////////////////////
-  // localStorage의 데이터를 늦게 가져와서 UI가 안 바뀝니다. (미해결 문제)
-  //////////////////////////////////////////////////////////////////
+  // 초기 렌더 시 localStoragedp user데이터를 ref에 담아 로그인 유저 정보 유지
   useEffect(() => {
-    localStorage.getItem('token') !== null && setHasToken(true);
-    setCurUserEmail(authHandler.getEmail());
-    setCurUserUid(authHandler.getUid());
-  }, []);
+    if (localStorage.getItem('user') !== null) {
+      curUserInfo.current = JSON.parse(localStorage.getItem('user'));
+      setHasToken(true);
+    }
+  }, [reduxUser]);
 
   // 로그인 페이지로~
   const goLogin = (e) => {
@@ -179,14 +178,14 @@ export default function Header() {
   const logOut = () => {
     new tokenStorage().clearToken();
     setHasToken(false);
-    authHandler.clearEmail();
-    authHandler.clearUid();
+    localStorage.removeItem('user');
+    dispatch(remove_user());
     navi('/', { replace: true });
   };
 
   // 마이페이지로~
   const goMyPage = () => {
-    navi(`/mypage/${curUserUid}`);
+    navi(`/mypage/${curUserInfo.current.uid}`);
   };
 
   // 홈으로~
@@ -196,40 +195,39 @@ export default function Header() {
 
   // user email을 받아와 반환합니다
   const returnUserName = () => {
-    return auth.currentUser?.email;
+    return curUserInfo.current.email;
   };
 
   // curUserEmail이 비어있지 않다면 Header의 UI가 나옵니다
-  if (curUserEmail !== '') {
-    return (
-      <HeaderContainer>
-        <Logo onClick={() => goHome()}>
-          <img width="100px" src="/assets/images/logo.png" alt="" />
-        </Logo>
-        <MenuContainer>
-          {menu.map((menu) => (
-            <MenuItem key={menu}>{menu}</MenuItem>
-          ))}
-        </MenuContainer>
-        <ButtonContainer>
-          {hasToken === true
-            ? loginedButton.map((text, i) => (
-                <UserContainer key={i}>
-                  <Button onClick={() => logOut()} key={text} $bgColor={text}>
-                    {text}
-                  </Button>
-                  <UserIcon onClick={() => goMyPage()}>
-                    <UserName>{returnUserName()?.charAt(0)}</UserName>
-                  </UserIcon>
-                </UserContainer>
-              ))
-            : buttons.map((text) => (
-                <Button onClick={(e) => goLogin(e)} key={text} $bgColor={text}>
+
+  return (
+    <HeaderContainer>
+      <Logo onClick={() => goHome()}>
+        <img width="100px" src="/assets/images/logo.png" alt="" />
+      </Logo>
+      <MenuContainer>
+        {menu.map((menu) => (
+          <MenuItem key={menu}>{menu}</MenuItem>
+        ))}
+      </MenuContainer>
+      <ButtonContainer>
+        {hasToken === true
+          ? loginedButton.map((text, i) => (
+              <UserContainer key={i}>
+                <Button onClick={() => logOut()} key={text} $bgColor={text}>
                   {text}
                 </Button>
-              ))}
-        </ButtonContainer>
-      </HeaderContainer>
-    );
-  }
+                <UserIcon onClick={() => goMyPage()}>
+                  <UserName>{returnUserName().charAt(0)}</UserName>
+                </UserIcon>
+              </UserContainer>
+            ))
+          : buttons.map((text) => (
+              <Button onClick={(e) => goLogin(e)} key={text} $bgColor={text}>
+                {text}
+              </Button>
+            ))}
+      </ButtonContainer>
+    </HeaderContainer>
+  );
 }

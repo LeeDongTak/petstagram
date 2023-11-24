@@ -2,15 +2,15 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { app } from '../fireBase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import Swal from 'sweetalert2';
 import { FadeAni } from './MyPage';
-import authStorage from '../util/authUser';
-import tokenStorage from '../util/storage';
+import bcrypt from 'bcryptjs';
+import { useDispatch } from 'react-redux';
+import { add_user } from '../redux/modules/users';
 
 function LoginPage() {
-  const userInfoHandler = new authStorage();
-  const tokenHandler = new tokenStorage();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,11 +63,14 @@ function LoginPage() {
           imageWidth: 120
         }).then((value) => {
           if (value.isConfirmed === true) {
-            tokenHandler.saveToken(유저인증토큰객체.user.accessToken);
-            userInfoHandler.saveUid(유저인증토큰객체.user.uid);
-            userInfoHandler.saveEmail(유저인증토큰객체.user.email);
+            const user = {
+              uid: bcrypt.hashSync(유저인증토큰객체.user.uid, 10),
+              email: 유저인증토큰객체.user.email,
+              token: 유저인증토큰객체.user.accessToken
+            };
+            dispatch(add_user(user));
+            localStorage.setItem('user', JSON.stringify(user));
             navi('/');
-            window.location.reload();
           }
         });
       })

@@ -31,21 +31,28 @@ function MyPage() {
   // 사용자의 게시물을 받는 useEffect
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, 'posts'));
-      const querySnapshot = await getDocs(q);
-      const initialPosts = [];
-      querySnapshot.forEach((post) => {
-        const data = { id: post.id, ...post.data() };
-        initialPosts.push(data);
-      });
-      setPost(initialPosts);
+      try {
+        const q = query(collection(db, 'posts'));
+        const querySnapshot = await getDocs(q);
+
+        const initialPosts = [];
+        querySnapshot.forEach((post) => {
+          const data = { id: post.id, ...post.data() };
+          initialPosts.push(data);
+        });
+        setPost(initialPosts.filter((el) => el.id === id));
+        console.log(initialPosts); // [{}, {}, {}, {}]
+      } catch (err) {
+        console.log(err);
+      }
     };
     fetchData();
   }, []);
+  console.log(post);
 
   // 게시물을 현재 사용자의 id와 같은 것들로 보여주기 위한 filter
   const filteredData = post?.filter((post) => post.id === id);
-
+  console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -70,15 +77,16 @@ function MyPage() {
             </PetProfileContainer>
           </ProfileContainer>
         ) : (
-          filteredData.map((item) => {
+          filteredData?.map((item) => {
             return (
-              <MyPosts
-                title={item.title}
-                content={item.content}
-                uid={item.uid}
-                postId={item.id}
-                setPost={setPost}
-              ></MyPosts>
+              <MyPosts item={item}></MyPosts>
+              // <MyPosts
+              //   title={item.title}
+              //   content={item.content}
+              //   uid={item.uid}
+              //   postId={item.id}
+              //   setPost={setPost}
+              // ></MyPosts>
             );
           })
         )}
