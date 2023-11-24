@@ -52,6 +52,7 @@ const MenuContainer = styled.div`
 const MenuItem = styled.div`
   position: relative;
   width: fit-content;
+  font-size: 1.3rem;
   padding: 0.3rem 0;
   font-weight: 600;
   color: var(--primary-color);
@@ -157,7 +158,7 @@ export default function Header() {
   const [hasToken, setHasToken] = useState(false);
 
   // Styled-Components 반복 생성 시 사용하는 변수
-  const menu = ['Features', 'Pricing', 'Community', 'Support'];
+  const menu = ['Posts', 'Products', 'Community', 'Support'];
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
@@ -168,7 +169,6 @@ export default function Header() {
       setHasToken(true);
     }
   }, [reduxUser]);
-  console.log(curUserInfo);
 
   // 로그인 페이지로~
   const goLogin = (e) => {

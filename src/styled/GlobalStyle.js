@@ -29,6 +29,9 @@ const GlobalStyle = createGlobalStyle`
         vertical-align: baseline;
     }
     
+    html {
+        font-size: 12px;
+    }
 
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, 
