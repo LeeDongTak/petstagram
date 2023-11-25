@@ -224,8 +224,8 @@ export default function Header() {
 
   // 마이페이지로~
   const goMyPage = () => {
-    const compared = bcrypt.compareSync(curUserInfo.current.uid, '');
-    navi(`/mypage/${compared}`);
+    const uid = JSON.parse(localStorage.getItem('user')).uid;
+    navi(`/mypage/${uid}`);
     setMenuToggle(false);
   };
 

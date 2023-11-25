@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Tabs from '../components/mypage/Tabs';
 import OwnerProfile from '../components/mypage/OwnerProfile';
@@ -20,6 +19,7 @@ function MyPage() {
 
   // STATES
   const [post, setPost] = useState([]);
+  const [userName, setUserName] = useState('');
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -50,7 +50,6 @@ function MyPage() {
   }, []);
   console.log(post);
 
-
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
 
@@ -64,32 +63,32 @@ function MyPage() {
     fetchUserInfo();
   }, []);
 
-
   return (
     <>
       <Tabs onClickTab={onActiveTab} activeTab={activeTab}></Tabs>
-      {activeTab === '프로필' ? (
-        <ProfileContainer>
-          <OwnerProfile></OwnerProfile>
-          <PetProfileContainer>
-            <PetProfile></PetProfile>
-          </PetProfileContainer>
-        </ProfileContainer>
-      ) : (
-        filteredData.map((item) => {
-          return (
-            <MyPosts
-              title={item.title}
-              content={item.content}
-              uid={item.uid}
-              postId={item.id}
-              post={post}
-              setPost={setPost}
-            ></MyPosts>
-          );
-        })
-      )}
-
+      <MyPageContainer>
+        {activeTab === '프로필' ? (
+          <ProfileContainer>
+            <OwnerProfile></OwnerProfile>
+            <PetProfileContainer>
+              <PetProfile></PetProfile>
+            </PetProfileContainer>
+          </ProfileContainer>
+        ) : (
+          filteredData.map((item) => {
+            return (
+              <MyPosts
+                title={item.title}
+                content={item.content}
+                uid={item.uid}
+                postId={item.id}
+                post={post}
+                setPost={setPost}
+              ></MyPosts>
+            );
+          })
+        )}
+      </MyPageContainer>
     </>
   );
 }

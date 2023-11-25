@@ -13,6 +13,24 @@ function MyPosts({ title, content, postId, setPost, post }) {
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
 
+  // FUNCTIONS
+  // 게시물 삭제
+  const deletePostHandler = async () => {
+    const docRef = doc(db, 'posts', postId);
+    await deleteDoc(docRef);
+    setPost((prev) => {
+      return prev.filter((el) => el.id !== postId);
+    });
+  };
+
+  const onChangeEditTitle = (e) => {
+    setEditingTitle(e.target.value);
+  };
+
+  const onChangeEditContent = (e) => {
+    setEditingContent(e.target.value);
+  };
+
   // 게시물 수정
   const editPostHandler = async (e) => {
     e.preventDefault();
@@ -97,28 +115,8 @@ function MyPosts({ title, content, postId, setPost, post }) {
     });
   };
 
-function MyPosts({ title, content, uid, postId, setPost }) {
-  // FUNCTIONS
-  // 게시물 삭제
-  const deletePostHandler = async () => {
-    const docRef = doc(db, 'posts', postId);
-    await deleteDoc(docRef);
-    setPost((prev) => {
-      return prev.filter((el) => el.id !== postId);
-    });
-  };
-
-  const onChangeEditTitle = (e) => {
-    setEditingTitle(e.target.value);
-  };
-
-  const onChangeEditContent = (e) => {
-    setEditingContent(e.target.value);
-  };
-
   return (
     <MyPostsContainer>
-
       {!isEditing ? (
         <MyPostCard>
           <PostContainer>
@@ -160,12 +158,9 @@ function MyPosts({ title, content, uid, postId, setPost }) {
           </PostContainer>
         </MyPostCard>
       )}
-
     </MyPostsContainer>
   );
 }
-
-export default MyPosts;
 
 // STYLED-COMPONENTS
 const MyPostsContainer = styled.div`
@@ -231,3 +226,5 @@ const PostImageContainer = styled.div`
     height: 100px;
   }
 `;
+
+export default MyPosts;
