@@ -1,4 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import MainBanner from '../components/MainBanner/MainBanner';
+import Recommend from '../components/Recommend/Recommend';
+import Products from '../components/Products/Products';
+import { FadeAni } from './MyPage';
+
+const HomeContainer = styled.div`
+  width: 100%;
+  animation: ${FadeAni} 0.5s forwards;
+`;
 import GlobalStyle from '../styled/GlobalStyle';
 import EditorBox from './Editor'
 import { fetchData } from '../fireBase';
@@ -37,19 +47,16 @@ const PostList=styled.div`
 
 
 function Home() {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const postsData = await fetchData();
-      setPosts(postsData);
-    };
-
-    fetchPosts();
-  }, [posts]);
   return (
+    <div >  
+   <HomeContainer>
+      <MainBanner />
+      <Recommend />
+      <Products />
+    </HomeContainer>
+  
 
-    <div >    
+   
       <PostList>
     <h1>게시글 목록</h1>
     <ul>
@@ -64,9 +71,8 @@ function Home() {
     </ul>
     </PostList>
       <EditorBox></EditorBox>
-
     </div>
   )
 }
 
-export default Home
+export default Home;
