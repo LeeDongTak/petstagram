@@ -15,7 +15,6 @@ import {
 import { collection, getDocs, query } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import { FadeAni } from './MyPage';
-import bcrypt from 'bcryptjs';
 import { useDispatch } from 'react-redux';
 import { add_user } from '../redux/modules/users';
 
@@ -150,7 +149,7 @@ function LoginPage() {
           const filterData = initialPets.filter((x) => x.uid === user.uid);
           if (value.isConfirmed === true) {
             const token = {
-              uid: bcrypt.hashSync(user.uid, 10),
+              uid: user.uid,
               email: user.email,
               token: user.accessToken
             };
@@ -158,13 +157,13 @@ function LoginPage() {
             localStorage.setItem('user', JSON.stringify(token));
             if (filterData.length === 0) {
               Swal.fire({
-              html: '<p style="font-size: 14px;">프로필 등록페이지로 이동합니다.</p>',
-              confirmButtonText: '확인',
-              confirmButtonColor: '#FF5036',
-              width: '28rem',
-              imageUrl: '/assets/img/logo.png',
-              imageWidth: 120
-            })
+                html: '<p style="font-size: 14px;">프로필 등록페이지로 이동합니다.</p>',
+                confirmButtonText: '확인',
+                confirmButtonColor: '#FF5036',
+                width: '28rem',
+                imageUrl: '/assets/img/logo.png',
+                imageWidth: 120
+              });
               navi(`/addprofile/${user.uid}`);
             } else {
               navi(`/`);
