@@ -27,20 +27,36 @@ function PetProfile() {
 
 export default PetProfile;
 
+// STYLED-COMPONENTS
+
 const PetProfileContainer = styled.div`
   border: 1px solid #c6c6c6;
   display: flex;
-  justify-content: center;
+
+  margin: auto;
   align-items: center;
-  padding: 15px;
-  gap: 25px;
-  width: 800px;
+  padding: 1.25rem 3rem 1.25rem 1.25rem;
+  width: 100%;
+  max-width: 900px;
+
   border-radius: 10px;
+  border: 1px solid black;
 
   & img {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 135px;
     border-radius: 50%;
+    flex-basis: 20%;
+    margin-right: 1rem;
+    object-fit: cover;
+
+    @media screen and (max-width: 768px) {
+      flex-basis: 150px;
+      height: 105px;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    padding: 1rem 0.65rem;
   }
 `;
 
@@ -55,6 +71,7 @@ const PetInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 `;
 
 const PetNameAgeGender = styled.h3`
@@ -64,6 +81,16 @@ const PetNameAgeGender = styled.h3`
 
 const PetIntro = styled.p`
   font-size: 18px;
+  margin-block: 0.45rem;
+  padding: 1rem 0 1rem 0.65rem;
+  line-height: 1.45rem;
+  border-radius: 9px;
+  background-color: #eee;
+  @media screen and (max-width: 768px) {
+    height: 80px;
+    padding: 0.45rem 1rem;
+    overflow-y: scroll;
+  }
 `;
 
 const PetLike = styled.p`

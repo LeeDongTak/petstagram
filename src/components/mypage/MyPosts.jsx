@@ -97,11 +97,12 @@ function MyPosts({ title, content, postId, setPost, post }) {
     });
   };
 
+function MyPosts({ title, content, uid, postId, setPost }) {
+  // FUNCTIONS
   // 게시물 삭제
   const deletePostHandler = async () => {
     const docRef = doc(db, 'posts', postId);
     await deleteDoc(docRef);
-
     setPost((prev) => {
       return prev.filter((el) => el.id !== postId);
     });
@@ -117,6 +118,7 @@ function MyPosts({ title, content, postId, setPost, post }) {
 
   return (
     <MyPostsContainer>
+
       {!isEditing ? (
         <MyPostCard>
           <PostContainer>
@@ -158,12 +160,14 @@ function MyPosts({ title, content, postId, setPost, post }) {
           </PostContainer>
         </MyPostCard>
       )}
+
     </MyPostsContainer>
   );
 }
 
 export default MyPosts;
 
+// STYLED-COMPONENTS
 const MyPostsContainer = styled.div`
   margin-bottom: 20px;
   display: flex;
