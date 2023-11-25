@@ -1,47 +1,32 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc,getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 
 
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCJfp-HkLbo96_nrh8NN9y-o_BDeFRy4fA",
-  authDomain: "website-6fb45.firebaseapp.com",
-  projectId: "website-6fb45",
-  storageBucket: "website-6fb45.appspot.com",
-  messagingSenderId: "995582214512",
-  appId: "1:995582214512:web:e8ba24e0c4ca4ffb948fb5"
-};
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db= getFirestore(app);
-
-
-export const saveData= async (id,title,content)=>{
-  try{
-    const docRef =await addDoc(collection(db,"posts"),{
+export const saveData = async (id, title, content) => {
+  try {
+    const docRef = await addDoc(collection(db, "posts"), {
       id,
       title,
       content
     });
-    console.log('제목,내용 저장',docRef.id);
-    
-  }catch(e){
+    console.log('제목,내용 저장', docRef.id);
+
+  } catch (e) {
     console.log('실패')
     return null;
   }
 };
 
-export const fetchData = async()=>{
-  const snapshot =await getDocs(collection(db,"posts"));
-  const posts=[];
-  snapshot.forEach((doc)=>{
-    posts.push({id:doc.id,...doc.data()});
+export const fetchData = async () => {
+  const snapshot = await getDocs(collection(db, "posts"));
+  const posts = [];
+  snapshot.forEach((doc) => {
+    posts.push({ id: doc.id, ...doc.data() });
   });
   return posts;
 };
 
-const storage = getStorage(app);
 
 export const uploadImage = async (file) => {
   try {
@@ -68,7 +53,7 @@ export const fetchSinglePost = async (postId) => {
   try {
     const docRef = doc(db, "posts", postId);
     const docSnap = await getDocs(docRef);
-    
+
     if (docSnap.exists()) {
       return docSnap.data();
 
@@ -81,3 +66,27 @@ export const fetchSinglePost = async (postId) => {
     return null;
   }
 };
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { config } from "./config";
+// Your we b app's Firebase configuration
+// Initialize Firebase
+
+const firebaseConfig = config.db.dbConfig
+
+export const app = initializeApp(firebaseConfig);
+// Your web app's Firebase configuration
+
+
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Initialize Firebase
+
+
+// Initialize FireStore
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+export const storage = getStorage(app);
