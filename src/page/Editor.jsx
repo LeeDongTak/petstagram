@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
-import { saveData, fetchData,uploadImage, } from '../fireBase';
+import { saveData, fetchData,uploadImage,fetchSinglePost } from '../fireBase';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
@@ -10,6 +10,7 @@ import '@toast-ui/editor/dist/i18n/ko-kr';
 import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetEditor, setContent,setTitle, } from '../redux/modules/actions';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -34,30 +35,34 @@ const PostingTitle = styled.div`
     border : 1px solid #FF2E00; 
   }
   img{
-    width: 30%;
+  width: 30%;
   height: 30%;
   text-align: center;
   }`
 const EditContainer = styled.div`
-
 margin:  auto;
 margin-top: 150px;
 max-width: 700px;
-border : 1px solid black;
+border : 1px solid #FF2E00; ;
 `
 const EditBtn = styled.button`
+box-sizing: border-box;
 background-color:#FF2E00 ;
+width: 150px;
 margin-top: 5px;
 color: white;
 border: none;
 font-size: 20px;
-margin-left: 630px;
+margin-left: 540px;
+border-radius: 5px;
+padding: 5px;
 
 `
 function EditorBox() {
   const dispatch = useDispatch();
   const editorState = useSelector((state)=>state)
   const editorRef =useRef();
+  const navigate = useNavigate();
   const onChange= ()=>{
     const data = editorRef.current.getInstance().getHTML();
     dispatch(setContent(data));
@@ -72,13 +77,16 @@ function EditorBox() {
   const onSaveData = async () => {
     await saveData(editorState.editId,editorState.editTitle, editorState.editorData);
     dispatch(resetEditor());
-    console.log('완료')
+    fetchSinglePost();
+    console.log('완료');
+    navigate(`/post/${editorState.editId}`)
     // const data = editorRef.current.getInstance().getHTML();
     
     // // 서버로 데이터 전송
     // await saveData(editTitle, data);
   };
   const [editTitle, editSetTitle] = useState('');
+
   return (
     <div>
       <EditContainer>
@@ -99,7 +107,7 @@ function EditorBox() {
           addImageBlobHook: onUploadImage
         }}
       />
-      <div><EditBtn onClick={onSaveData}>완 료</EditBtn></div>
+      <div><EditBtn onClick={onSaveData}>작 성 완 료</EditBtn></div>
       </EditContainer>
 
       </div>

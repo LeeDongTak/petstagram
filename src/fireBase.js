@@ -5,13 +5,12 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA1IGCoNcZ1MH6GnPHp07vruAwxNdo4Deg",
-  authDomain: "sparta-73421.firebaseapp.com",
-  projectId: "sparta-73421",
-  storageBucket: "sparta-73421.appspot.com",
-  messagingSenderId: "546114751229",
-  appId: "1:546114751229:web:3c99e0a698f9d716d2cc94",
-  measurementId: "G-C9118BEXJ6"
+  apiKey: "AIzaSyCJfp-HkLbo96_nrh8NN9y-o_BDeFRy4fA",
+  authDomain: "website-6fb45.firebaseapp.com",
+  projectId: "website-6fb45",
+  storageBucket: "website-6fb45.appspot.com",
+  messagingSenderId: "995582214512",
+  appId: "1:995582214512:web:e8ba24e0c4ca4ffb948fb5"
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

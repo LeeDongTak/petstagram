@@ -8,9 +8,14 @@ const EditContainer = styled.div`
   padding: 10px;
   margin: auto;
   width: 500px;
-  height: 500px;
-  text-align: center;
+  height: 700px;
+  text-align: left ;
   box-sizing: border-box;
+  overflow: auto;
+
+  h1{
+    background-color: aliceblue;
+  }
   i{
     font-style: italic;
   }
@@ -28,6 +33,7 @@ const EditContainer = styled.div`
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+
 }
   h2{
     display: block;
@@ -61,6 +67,7 @@ img{
   text-align: center;
 }
 `;
+
 function ContentsViewer({ postId }) {
   const [contents, setContents] = useState('');
   const [title,setTitle]=useState('')
@@ -84,8 +91,8 @@ function ContentsViewer({ postId }) {
 
   return (
   <EditContainer>
-    <h1> 제목 :{title}</h1>
-  내용{shouldRenderViewer ? <Viewer initialValue={contents} /> : '로딩중!'}
+    <h1> {title}</h1>
+  {shouldRenderViewer ? <Viewer initialValue={contents} /> : '로딩중! 이에요 잠시만요!!'}
   </EditContainer>)
 }
 export default ContentsViewer;

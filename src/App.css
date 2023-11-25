@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+.custom-image-class{
+  max-width: 100%; 
+  border: 2px solid #3498db;
+  border-radius: 5px;
+}
