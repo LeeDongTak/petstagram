@@ -199,7 +199,7 @@ export default function Header() {
       setHasToken(true);
     }
   }, [reduxUser]);
-
+  
   // FUNCTIONS
   const handleToggle = () => {
     setMenuToggle((prev) => !prev);
