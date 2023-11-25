@@ -1,8 +1,18 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { app } from '../fireBase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { app, db } from '../fireBase';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithRedirect,
+  GithubAuthProvider
+} from 'firebase/auth';
+import { collection, getDocs, query } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import { FadeAni } from './MyPage';
 import bcrypt from 'bcryptjs';
@@ -50,7 +60,7 @@ function LoginPage() {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((유저인증토큰객체) => {
-        console.log(유저인증토큰객체.user);
+        console.log(유저인증토큰객체);
         setEmail('');
         setPassword('');
         Swal.fire({
@@ -62,6 +72,7 @@ function LoginPage() {
           imageUrl: '/assets/img/logo.png',
           imageWidth: 120
         }).then((value) => {
+          console.log(value);
           if (value.isConfirmed === true) {
             const user = {
               uid: bcrypt.hashSync(유저인증토큰객체.user.uid, 10),
@@ -97,6 +108,7 @@ function LoginPage() {
         setEmail('');
         setPassword('');
         alert('회원가입이 완료 되었습니다');
+        navi(`/addprofile/${유저인증토큰객체.user.uid}`);
       })
       .catch((err) => {
         if (err.code === 'auth/email-already-in-use') {
@@ -111,6 +123,60 @@ function LoginPage() {
           });
         }
       });
+  };
+
+  // 파이어 배이스 - 소셜로그인 (Google, Facebook)
+  const socialLogin = async (provider) => {
+    try {
+      const result = await signInWithPopup(auth, new provider());
+      const user = result.user;
+      setEmail('');
+      setPassword('');
+      Swal.fire({
+        title: '<span style="font-size: 22px;">로그인 성공!</span>',
+        html: '<p style="font-size: 14px;">펫스타그램에 로그인이 완료 되었습니다.</p>',
+        confirmButtonText: '확인',
+        confirmButtonColor: '#FF5036',
+        width: '28rem',
+        imageUrl: '/assets/img/logo.png',
+        imageWidth: 120
+      }).then((value) => {
+        const fetchData = async () => {
+          const querySnapshot = await getDocs(query(collection(db, 'users')));
+          const initialPets = [];
+          querySnapshot.forEach((doc) => {
+            initialPets.push({ uid: doc.id, ...doc.data() });
+          });
+          const filterData = initialPets.filter((x) => x.uid === user.uid);
+          if (value.isConfirmed === true) {
+            const token = {
+              uid: bcrypt.hashSync(user.uid, 10),
+              email: user.email,
+              token: user.accessToken
+            };
+            dispatch(add_user(token));
+            localStorage.setItem('user', JSON.stringify(token));
+            if (filterData.length === 0) {
+              Swal.fire({
+              html: '<p style="font-size: 14px;">프로필 등록페이지로 이동합니다.</p>',
+              confirmButtonText: '확인',
+              confirmButtonColor: '#FF5036',
+              width: '28rem',
+              imageUrl: '/assets/img/logo.png',
+              imageWidth: 120
+            })
+              navi(`/addprofile/${user.uid}`);
+            } else {
+              navi(`/`);
+            }
+          }
+        };
+        fetchData();
+      });
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //로그아웃 - 현재 필요없는듯
@@ -174,6 +240,23 @@ function LoginPage() {
             >
               로그인
             </ButtonLogin>
+            <ButtonSocialLogin
+              onClick={() => {
+                socialLogin(GoogleAuthProvider);
+              }}
+              $logIn="google"
+            >
+              Google로 로그인 하기
+            </ButtonSocialLogin>
+            <ButtonSocialLogin
+              onClick={() => {
+                socialLogin(FacebookAuthProvider);
+              }}
+              $logIn="Facebook"
+            >
+              <img src="" alt="" />
+              Facebook으로 로그인 하기
+            </ButtonSocialLogin>
             {/* <ButtonLogout onClick={logOut}>로그아웃</ButtonLogout> */}
           </ButtonWrap>
         </form>
@@ -269,6 +352,24 @@ const ButtonLogin = styled.button`
     background-color: #dadada;
     color: #ff5036;
   }
+`;
+
+// 소셜로그인 버튼 google GitHub Facebook
+const ButtonSocialLogin = styled.div`
+  width: 100%;
+  height: 50px;
+  border: none;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ $logIn }) => ($logIn === 'Facebook' ? '#3b5998' : $logIn === 'GitHub' ? '#171515' : '#fff')};
+  color: ${({ $logIn }) => ($logIn === 'google' ? '#000' : '#fff')};
+  border: ${({ $logIn }) => ($logIn === 'google' ? '1px solid #000;' : '0')};
+  border-radius: 64px;
+  /* color: #ff5036; */
+  margin-top: 10px;
+  cursor: pointer;
 `;
 
 //로그아웃 버튼

@@ -209,7 +209,7 @@ const addprofile = (state = initialState, action) => {
             // 스토리지에 이미지 저장
             const imageRef = ref(
               storage,
-              `${action.payload.id}/${moment().format('YYYYMMDDHHMMSS')}/${state.profileimg.name}`
+              `${action.payload.id} / ${moment().format('YYYYMMDDHHMMSS')} / ${state.profileimg.name}`
             );
             await uploadBytes(imageRef, state.profileimg);
             const downloadURL = await getDownloadURL(imageRef);
@@ -219,9 +219,9 @@ const addprofile = (state = initialState, action) => {
                 action.payload.e.preventDefault();
                 const newProfile = {
                   profileimgURL: downloadURL, // 프로필 이미지 파일
-                  profilename: '', // 프로필 이름
-                  profileIntroduction: '', // 프로필 한줄소개
-                  profileInterests: [] // 프로필 관심사 배열로 저장
+                  profilename: state.profilename, // 프로필 이름
+                  profileIntroduction: state.profileIntroduction, // 프로필 한줄소개
+                  profileInterests: state.profileInterests // 프로필 관심사 배열로 저장
                 };
                 await setDoc(doc(db, 'users', `${action.payload.id}`), newProfile);
                 action.payload.navigate('/');
