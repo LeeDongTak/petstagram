@@ -1,9 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { db } from '../../fireBase';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { db, storage } from '../../fireBase';
+import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import PostEdit from './PostEdit';
+import { useState } from 'react';
+import { v4 } from 'uuid';
 
-function MyPosts({ title, content, uid, postId, setPost }) {
+function MyPosts({ title, content, uid, postId, setPost, post }) {
+  const [showEdit, setShowEdit] = useState(false);
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imageList, setImageList] = useState([]);
+
+  const uploadImage = () => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${postId + v4()}`);
+    uploadBytes(imageRef, imageUpload).then(() => {
+      alert('imageupload');
+    });
+  };
+
+  const showEditPostHandler = () => {
+    setShowEdit(true);
+  };
+
+  const cancelEditPostHandler = () => {
+    setShowEdit(false);
+  };
+
+  const IMAGE_LIST = ref(storage, 'images/');
+
+  useEffect(() => {
+    listAll(IMAGE_LIST).then((res) => {
+      res.items.forEach((image) => {
+        getDownloadURL(image).then((url) => {
+          setImageList((prev) => [...prev, url]);
+        });
+      });
+    });
+  }, []);
+
   // 게시물 삭제
   const deletePostHandler = async () => {
     const docRef = doc(db, 'posts', postId);
@@ -14,18 +50,65 @@ function MyPosts({ title, content, uid, postId, setPost }) {
     });
   };
 
+  const [editingTitle, setEditingTitle] = useState('');
+  const [editingContent, setEditingContent] = useState('');
+
+  const onChangeEditTitle = (e) => {
+    setEditingTitle(e.target.value);
+  };
+
+  const onChangeEditContent = (e) => {
+    setEditingContent(e.target.value);
+  };
+
+  // 게시물 수정
+  const editPostHandler = async (e) => {
+    e.preventDefault();
+    const docRef = doc(db, 'posts', postId);
+    await updateDoc(docRef, { title: editingTitle, content: editingContent });
+
+    setPost((prev) => {
+      return prev.map((post) => {
+        if (post.id === postId) {
+          return { ...post, title: editingTitle, content: editingContent };
+        } else {
+          return post;
+        }
+      });
+    });
+  };
+
   return (
     <MyPostsContainer>
+      {showEdit ? (
+        <PostEdit
+          showEdit={showEdit}
+          showEditPostHandler={showEditPostHandler}
+          cancelEditPostHandler={cancelEditPostHandler}
+          onChangeEditTitle={onChangeEditTitle}
+          onChangeEditContent={onChangeEditContent}
+          editPostHandler={editPostHandler}
+          postId={postId}
+          title={title}
+          content={content}
+          post={post}
+          setPost={setPost}
+          uploadImage={uploadImage}
+          setImageUpload={setImageUpload}
+        ></PostEdit>
+      ) : null}
       <MyPostCard>
         <PostContainer>
           <PostInfo>
             <p>uid: {uid}</p>
-
+            {imageList.map((url) => {
+              return <img src={url} width="100px" />;
+            })}
             <PostTitle>{title}</PostTitle>
             <PostContent>{content}</PostContent>
           </PostInfo>
           <ButtonWrapper>
-            <button>수정</button>
+            <button onClick={showEditPostHandler}>수정</button>
             <button onClick={deletePostHandler}>삭제</button>
           </ButtonWrapper>
         </PostContainer>

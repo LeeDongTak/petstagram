@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import Tabs from '../components/mypage/Tabs';
-import OwnerProfile from '../components/mypage/OwnerProfile';
-import PetProfile from '../components/mypage/PetProfile';
-import MyPosts from '../components/mypage/MyPosts';
+import Tabs from '../components/Mypage/Tabs';
+import OwnerProfile from '../components/Mypage/OwnerProfile';
+import PetProfile from '../components/Mypage/PetProfile';
+import MyPosts from '../components/Mypage/MyPosts';
 import { useEffect } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from '../fireBase';
@@ -13,7 +12,6 @@ import styled from 'styled-components';
 function MyPage() {
   const { id } = useParams();
   const [post, setPost] = useState([]);
-  const [username, setUserName] = useState(''); // 프로필 사용자 이름
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -39,25 +37,13 @@ function MyPage() {
 
   const filteredData = post.filter((post) => post.uid === id);
 
-  //사용자의 정보를 받는 useEffect
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const userData = auth.currentUser;
-      const email = userData.email;
-      setUserName(email);
-    };
-    fetchUserInfo();
-  }, []);
-
   return (
     <>
-      {/* navbar 공통컴포넌트 */}
-      <Navbar></Navbar>
       <Tabs onClickTab={onActiveTab} activeTab={activeTab}></Tabs>
 
       {activeTab === '프로필' ? (
         <ProfileContainer>
-          <OwnerProfile username={username}></OwnerProfile>
+          <OwnerProfile></OwnerProfile>
           <PetProfileContainer>
             <PetProfile></PetProfile>
             <PetProfile></PetProfile>
