@@ -5,12 +5,10 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './redux/config/configStore';
 import Router from './router/Router';
-import GlobalStyle from './styled/GlobalStyle';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
-    <GlobalStyle />
     <Router />
   </Provider>
 );

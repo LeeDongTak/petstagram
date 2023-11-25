@@ -19,7 +19,7 @@ function MyPage() {
 
   // STATES
   const [post, setPost] = useState([]);
-  const [username, setUserName] = useState(''); // 프로필 사용자 이름
+  const [userName, setUserName] = useState('');
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -50,8 +50,8 @@ function MyPage() {
   }, []);
   console.log(post);
 
-  // 게시물을 현재 사용자의 id와 같은 것들로 보여주기 위한 filter
-  const filteredData = post?.filter((post) => post.uid === id);
+  // 현재 사용자의 게시물 필터
+  const filteredData = post.filter((post) => post.uid === id);
   console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
@@ -68,25 +68,22 @@ function MyPage() {
       <MyPageContainer>
         {activeTab === '프로필' ? (
           <ProfileContainer>
-            <OwnerProfile username={username}></OwnerProfile>
+            <OwnerProfile></OwnerProfile>
             <PetProfileContainer>
-              <PetProfile></PetProfile>
-              <PetProfile></PetProfile>
-              <PetProfile></PetProfile>
               <PetProfile></PetProfile>
             </PetProfileContainer>
           </ProfileContainer>
         ) : (
           filteredData?.map((item) => {
             return (
-              <MyPosts item={item}></MyPosts>
-              // <MyPosts
-              //   title={item.title}
-              //   content={item.content}
-              //   uid={item.uid}
-              //   postId={item.id}
-              //   setPost={setPost}
-              // ></MyPosts>
+              <MyPosts
+                title={item.title}
+                content={item.content}
+                uid={item.uid}
+                postId={item.id}
+                post={post}
+                setPost={setPost}
+              ></MyPosts>
             );
           })
         )}
@@ -100,7 +97,9 @@ export default MyPage;
 const MyPageContainer = styled.div`
   font-size: 1.25rem;
   width: 100%;
-  padding: 0 15rem;
+  max-width: 1800px;
+  height: 100%;
+  padding: 1rem 21rem 9rem 21rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,11 +144,7 @@ const PetProfileContainer = styled.div`
   flex-direction: column;
   gap: 1.25rem;
   overflow-y: scroll;
+  border: 1px solid #eee;
+  padding: 1rem;
+  border-radius: 9px;
 `;
-
-// ! 목욜, 금욜 투두
-// ✅ 게시물 삭제
-// 게시물 수정
-// 프로필 사진 업로드 및 내용 수정
-// redux로 리펙토링
-// UI 수정 - 폰트, 색상, 쉐도우 등드으드으으

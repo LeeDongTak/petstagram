@@ -3,6 +3,7 @@ import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { config } from "./config";
+
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
@@ -86,8 +87,8 @@ export const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase
 
-
 // Initialize FireStore
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
+

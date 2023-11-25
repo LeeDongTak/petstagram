@@ -10,9 +10,11 @@ function Signup() {
   const navigate = useNavigate();
   const emailRef = useRef('');
 
-  useEffect(() => {
-    emailRef.current.focus();
-  }, []);
+  useEffect(()=>{
+    emailRef.current.focus()
+  },[])
+
+
   const emailHandler = (e) => {
     dispatch(emailChage(e.target.value));
   };
