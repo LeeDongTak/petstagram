@@ -59,6 +59,7 @@ const Footerstyle = styled.footer`
   bottom: ${(props) => (props.$footerview === true ? '0%' : '-100%')};
   width: 100%;
   border-top: 1px solid #c4c4c4;
+  padding: 0.9rem 1rem;
   color: #808080;
   font-size: 12px;
   line-height: 1.2;

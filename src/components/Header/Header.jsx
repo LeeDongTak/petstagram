@@ -179,6 +179,7 @@ export default function Header() {
   // STATES
   const [menuToggle, setMenuToggle] = useState(false);
 
+
   // 현재 로그인 유저 email, uid
   const curUserInfo = useRef('');
 
@@ -206,11 +207,14 @@ export default function Header() {
     setMenuToggle((prev) => !prev);
   };
 
+
   // 로그인 페이지로~
   const goLogin = (e) => {
     e.target.innerText === 'Log in' && navi('/login');
     e.target.innerText === 'Register' && navi('/signup');
+
     setMenuToggle(false);
+
   };
 
   // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
@@ -223,7 +227,6 @@ export default function Header() {
   };
 
   // 마이페이지로~
-  const goMyPage = () => {
     const uid = JSON.parse(localStorage.getItem('user')).uid;
     navi(`/mypage/${uid}`);
     setMenuToggle(false);

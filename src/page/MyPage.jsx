@@ -52,7 +52,6 @@ function MyPage() {
 
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
-
   console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
@@ -75,7 +74,7 @@ function MyPage() {
             </PetProfileContainer>
           </ProfileContainer>
         ) : (
-          filteredData.map((item) => {
+          filteredData?.map((item) => {
             return (
               <MyPosts
                 title={item.title}

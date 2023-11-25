@@ -104,6 +104,7 @@ const Price = styled.div`
   font-weight: bold;
   margin-block: 1rem;
 `;
+
 //할인율
 const PriceRate = styled.div`
   font-size: 18px;
@@ -146,6 +147,7 @@ export default function Products() {
           </ProductTitle>
           <ShopWrap>
             {products?.slice(0, 4).map((product) => (
+
               <ItemBox key={product.id}>
                 <div>
                   <ProductImage src={product.image} alt={product.name} />
@@ -156,7 +158,9 @@ export default function Products() {
                   <PriceRate>{product.discountRate}</PriceRate>
                 </PriceWrap>
                 <RegularPrice>{product.RatePrice}</RegularPrice>
+
               </ItemBox>
+
             ))}
           </ShopWrap>
         </ProductContainer>
