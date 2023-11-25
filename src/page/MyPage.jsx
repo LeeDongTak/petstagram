@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Tabs from '../components/Mypage/Tabs';
 import OwnerProfile from '../components/Mypage/OwnerProfile';
 import PetProfile from '../components/Mypage/PetProfile';
 import MyPosts from '../components/Mypage/MyPosts';
-import { useEffect } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { auth, db } from '../fireBase';
 import { useParams } from 'react-router-dom';
@@ -35,6 +34,7 @@ function MyPage() {
     fetchData();
   }, []);
 
+  // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
 
   return (
@@ -46,9 +46,6 @@ function MyPage() {
           <OwnerProfile></OwnerProfile>
           <PetProfileContainer>
             <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
-            <PetProfile></PetProfile>
           </PetProfileContainer>
         </ProfileContainer>
       ) : (
@@ -59,6 +56,7 @@ function MyPage() {
               content={item.content}
               uid={item.uid}
               postId={item.id}
+              post={post}
               setPost={setPost}
             ></MyPosts>
           );
@@ -82,10 +80,3 @@ const PetProfileContainer = styled.div`
   justify-content: space-between;
   gap: 20px;
 `;
-
-// ! 목욜, 금욜 투두
-// ✅ 게시물 삭제
-// 게시물 수정
-// 프로필 사진 업로드 및 내용 수정
-// redux로 리펙토링
-// UI 수정 - 폰트, 색상, 쉐도우 등드으드으으

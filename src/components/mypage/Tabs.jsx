@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
 
 function Tabs({ onClickTab, activeTab }) {
   return (
-    <TabContainer onClick={onClickTab}>
-      <TabList $activeTab={activeTab}>프로필</TabList>
-      <TabList $activeTab={activeTab}>내 게시글</TabList>
-    </TabContainer>
+    <TabWrapper>
+      <TabContainer onClick={onClickTab} r>
+        <TabList $activeTab={activeTab}>프로필</TabList>
+        <TabList $activeTab={activeTab}>내 게시글</TabList>
+      </TabContainer>
+      <button>{activeTab === '프로필' ? '프로필 수정' : '게시글 작성'}</button>
+    </TabWrapper>
   );
 }
 
 export default Tabs;
 
-const TabContainer = styled.ul`
+const TabWrapper = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+
   height: 120px;
   color: #ff5036;
+
+  & button {
+    padding: 10px 15px;
+    border: 1px solid #ff5036;
+    background-color: #ff5036;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+`;
+
+const TabContainer = styled.ul`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 `;
 
 const TabList = styled.li`

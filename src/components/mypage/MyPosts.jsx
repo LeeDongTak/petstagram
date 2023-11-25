@@ -1,37 +1,71 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { db, storage } from '../../fireBase';
-import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import PostEdit from './PostEdit';
-import { useState } from 'react';
 import { v4 } from 'uuid';
+import { db, storage } from '../../fireBase';
+import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import PostImages from './PostImages';
 
-function MyPosts({ title, content, uid, postId, setPost, post }) {
-  const [showEdit, setShowEdit] = useState(false);
+function MyPosts({ title, content, postId, setPost, post }) {
+  const [isEditing, setIsEditig] = useState(false);
   const [imageUpload, setImageUpload] = useState(null);
   const [imageList, setImageList] = useState([]);
+  const [editingTitle, setEditingTitle] = useState('');
+  const [editingContent, setEditingContent] = useState('');
 
+  // 게시물 수정
+  const editPostHandler = async (e) => {
+    e.preventDefault();
+    const docRef = doc(db, 'posts', postId);
+
+    // 새로운 제목 또는 내용만 업데이트
+    const updatedData = {};
+    if (editingTitle) {
+      updatedData.title = editingTitle;
+    }
+    if (editingContent) {
+      updatedData.content = editingContent;
+    }
+
+    // Firestore에서 업데이트
+    await updateDoc(docRef, updatedData);
+
+    setPost((prev) => {
+      return prev.map((p) => {
+        if (p.id === postId) {
+          return { ...p, updatedData }; // 기존 포스트와 업데이트된 데이터 병합
+        } else {
+          return p;
+        }
+      });
+    });
+
+    // 이미지 업로드
+    uploadImage();
+    setIsEditig(false);
+  };
+
+  // 이미지 업로드 함수
   const uploadImage = () => {
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${postId + v4()}`);
+    if (imageUpload === null) return;
+    const imageRef = ref(storage, `${postId}/${v4()}`);
     uploadBytes(imageRef, imageUpload).then(() => {
-      alert('imageupload');
+      alert('이미지가 성공적으로 업로드 되었습니다.');
     });
   };
 
   const showEditPostHandler = () => {
-    setShowEdit(true);
+    setIsEditig(true);
   };
 
   const cancelEditPostHandler = () => {
-    setShowEdit(false);
+    setIsEditig(false);
   };
 
-  const IMAGE_LIST = ref(storage, 'images/');
+  const IMAGE_FOLDER = ref(storage, `${postId}`);
 
   useEffect(() => {
-    listAll(IMAGE_LIST).then((res) => {
+    listAll(IMAGE_FOLDER).then((res) => {
       res.items.forEach((image) => {
         getDownloadURL(image).then((url) => {
           setImageList((prev) => [...prev, url]);
@@ -39,6 +73,29 @@ function MyPosts({ title, content, uid, postId, setPost, post }) {
       });
     });
   }, []);
+
+  // 이미지 삭제
+  //gs://album-6d914.appspot.com/NRPxRcnLzup3up9tR0hI/2cdb0b77-c066-4004-8c01-f4c804f5781f
+  //gs://album-6d914.appspot.com/NRPxRcnLzup3up9tR0hI/b5c5ee7d-0cd0-430c-8c34-317b38f09cf8
+  //'NRPxRcnLzup3up9tR0hI/04194320-15a4-42ca-af78-c1ed972e03d6'
+
+  const deleteImage = () => {
+    listAll(IMAGE_FOLDER).then((res) => {
+      res.items.forEach((image) => {
+        const desertRef = ref(storage, image.fullPath);
+
+        console.log(desertRef);
+        // Delete the file
+        deleteObject(desertRef)
+          .then(() => {
+            alert('이미지가 삭제되었습니다.');
+          })
+          .catch((error) => {
+            alert('다시 시도해 주세요.');
+          });
+      });
+    });
+  };
 
   // 게시물 삭제
   const deletePostHandler = async () => {
@@ -50,9 +107,6 @@ function MyPosts({ title, content, uid, postId, setPost, post }) {
     });
   };
 
-  const [editingTitle, setEditingTitle] = useState('');
-  const [editingContent, setEditingContent] = useState('');
-
   const onChangeEditTitle = (e) => {
     setEditingTitle(e.target.value);
   };
@@ -61,58 +115,49 @@ function MyPosts({ title, content, uid, postId, setPost, post }) {
     setEditingContent(e.target.value);
   };
 
-  // 게시물 수정
-  const editPostHandler = async (e) => {
-    e.preventDefault();
-    const docRef = doc(db, 'posts', postId);
-    await updateDoc(docRef, { title: editingTitle, content: editingContent });
-
-    setPost((prev) => {
-      return prev.map((post) => {
-        if (post.id === postId) {
-          return { ...post, title: editingTitle, content: editingContent };
-        } else {
-          return post;
-        }
-      });
-    });
-  };
-
   return (
     <MyPostsContainer>
-      {showEdit ? (
-        <PostEdit
-          showEdit={showEdit}
-          showEditPostHandler={showEditPostHandler}
-          cancelEditPostHandler={cancelEditPostHandler}
-          onChangeEditTitle={onChangeEditTitle}
-          onChangeEditContent={onChangeEditContent}
-          editPostHandler={editPostHandler}
-          postId={postId}
-          title={title}
-          content={content}
-          post={post}
-          setPost={setPost}
-          uploadImage={uploadImage}
-          setImageUpload={setImageUpload}
-        ></PostEdit>
-      ) : null}
-      <MyPostCard>
-        <PostContainer>
-          <PostInfo>
-            <p>uid: {uid}</p>
-            {imageList.map((url) => {
-              return <img src={url} width="100px" />;
-            })}
-            <PostTitle>{title}</PostTitle>
-            <PostContent>{content}</PostContent>
-          </PostInfo>
-          <ButtonWrapper>
-            <button onClick={showEditPostHandler}>수정</button>
-            <button onClick={deletePostHandler}>삭제</button>
-          </ButtonWrapper>
-        </PostContainer>
-      </MyPostCard>
+      {!isEditing ? (
+        <MyPostCard>
+          <PostContainer>
+            <PostInfo>
+              <h3>{title}</h3>
+              <p>{content}</p>
+              <PostImageContainer>
+                <PostImages imageList={imageList} deleteImage={deleteImage} isEditing={isEditing}></PostImages>
+              </PostImageContainer>
+            </PostInfo>
+            <ButtonWrapper>
+              <button onClick={showEditPostHandler}>수정</button>
+              <button onClick={deletePostHandler}>삭제</button>
+            </ButtonWrapper>
+          </PostContainer>
+        </MyPostCard>
+      ) : (
+        <MyPostCard>
+          <PostContainer>
+            <PostInfo>
+              <input type="text" defaultValue={title} onChange={onChangeEditTitle} />
+              <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="10"
+                defaultValue={content}
+                onChange={onChangeEditContent}
+              ></textarea>
+              <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
+              <PostImageContainer>
+                <PostImages imageList={imageList} deleteImage={deleteImage} isEditing={isEditing}></PostImages>
+              </PostImageContainer>
+            </PostInfo>
+            <ButtonWrapper>
+              <button onClick={editPostHandler}>수정완료</button>
+              <button onClick={cancelEditPostHandler}>수정취소</button>
+            </ButtonWrapper>
+          </PostContainer>
+        </MyPostCard>
+      )}
     </MyPostsContainer>
   );
 }
@@ -170,5 +215,15 @@ const ButtonWrapper = styled.div`
     font-weight: bolder;
     border-radius: 3px;
     cursor: pointer;
+  }
+`;
+
+const PostImageContainer = styled.div`
+  display: flex;
+  gap: 20px;
+
+  & img {
+    width: 100px;
+    height: 100px;
   }
 `;
