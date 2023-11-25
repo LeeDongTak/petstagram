@@ -6,9 +6,9 @@ import { Provider } from "react-redux";
 function App() {
   return (
     <>
-    <Provider store={store}>
-      {/* <GlobalStyle /> */}
-      <Router />
+      <Provider store={store}>
+        {/* <GlobalStyle /> */}
+        <Router />
       </Provider>
     </>
   );

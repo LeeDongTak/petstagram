@@ -62,7 +62,6 @@ const GlobalStyle = createGlobalStyle`
         border-spacing: 0;
     }
 
-
     body {
         margin: 0;
         -webkit-font-smoothing: antialiased;

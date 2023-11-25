@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import MainBanner from '../components/MainBanner/MainBanner';
 import Recommend from '../components/Recommend/Recommend';
 import Products from '../components/Products/Products';
 import { FadeAni } from './MyPage';
+import GlobalStyle from '../styled/GlobalStyle';
+import EditorBox from './Editor'
+import { fetchData } from '../fireBase';
+import { Link } from 'react-router-dom';
 
 const HomeContainer = styled.div`
   width: 100%;
   animation: ${FadeAni} 0.5s forwards;
 `;
-import GlobalStyle from '../styled/GlobalStyle';
-import EditorBox from './Editor'
-import { fetchData } from '../fireBase';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+
+
 
 const PostList=styled.div`
   padding: 10px;
