@@ -31,7 +31,7 @@ export default PetCard;
 const StPetCard = styled.li`
   position: absolute;
   top: 50%;
-  left: ${({ $index }) => `${$index*40}%`};
+  left: ${({ $index }) => `${$index*50}%`};
   transform: translateY(-50%);
   width: 30%;
   height: auto;

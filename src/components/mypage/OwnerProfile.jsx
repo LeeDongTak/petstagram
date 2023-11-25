@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function OwnerProfile({ username }) {
+function OwnerProfile() {
   return (
     <ProfileContainer>
       <OwnerProfileContainer>
@@ -11,7 +11,7 @@ function OwnerProfile({ username }) {
         />
 
         <OwnerInfo>
-          <h3>{username}</h3>
+          <h3>유저이름</h3>
           <p>
             강아지 2마리와 고양이 1마리와 살아요.강아지 2마리와 고양이 1마리와 살아요.강아지 2마리와 고양이 1마리와
             살아요.
@@ -26,7 +26,6 @@ function OwnerProfile({ username }) {
           <span>#산책</span>
         </InterestedIn>
       </InterestedInWrapper>
-      <button>프로필 수정</button>
     </ProfileContainer>
   );
 }
@@ -37,6 +36,11 @@ export default OwnerProfile;
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
+
+  border-right: 1px solid #c6c6c6;
+  width: 300px;
+  padding: 55px;
+  gap: 30px;
   border-right: 1px solid #ffb4a9;
   width: 55%;
   padding: 4rem 1.25rem 0 1.25rem;
@@ -77,6 +81,7 @@ const OwnerInfo = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
+  line-height: 1.3;
   gap: 10px;
   word-wrap: break-word;
 
@@ -94,13 +99,15 @@ const OwnerInfo = styled.div`
     font-size: 14px;
     padding: 1rem;
     border-radius: 9px;
-    line-height: 1rem;
+    line-height: 1.3rem;
   }
 `;
 
 const InterestedInWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 
   & h3 {

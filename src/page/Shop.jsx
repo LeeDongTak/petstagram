@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import { FadeAni } from './MyPage';
 
 function Shop() {
-  const navi = useNavigate();
   const [products, setProducts] = useState([]);
   useEffect(() => {
     axios.get('/data/products.json').then((data) => {
@@ -33,7 +31,6 @@ function Shop() {
           </div>
         ))}
       </ShopWrap>
-      <Footer />
     </Wrap>
   );
 }
@@ -43,11 +40,14 @@ function Shop() {
 
 //전체랩
 const Wrap = styled.div`
-  padding: 10px;
   margin-top: 10px;
   max-width: 1200px;
+  max-height: 550px;
   margin: 0 auto;
   animation: ${FadeAni} 0.4s forwards;
+  @media screen and (max-width: 768px) {
+    padding-bottom: 12rem;
+  }
 `;
 
 //타이틀
@@ -100,7 +100,6 @@ const ProductTitle = styled.div`
 //가격 랩
 const PriceWrap = styled.div`
   display: flex;
-  space-between: 10px;
 `;
 
 //할인 가격
