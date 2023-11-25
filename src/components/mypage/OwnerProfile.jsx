@@ -94,7 +94,7 @@ const OwnerInfo = styled.div`
     font-size: 14px;
     padding: 1rem;
     border-radius: 9px;
-    line-height: 1rem;
+    line-height: 1.3rem;
   }
 `;
 

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tokenStorage from '../../util/storage';
-import { auth } from '../../fireBase';
-import authStorage from '../../util/authUser';
+import { useDispatch, useSelector } from 'react-redux';
+import { remove_user } from '../../redux/modules/users';
+import bcrypt, { hash } from 'bcryptjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faClose } from '@fortawesome/free-solid-svg-icons';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -34,23 +37,26 @@ const MenuContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 3.6rem;
+  transition: all 0.4s ease;
 
   // 768px 이하 반응형
   @media screen and (max-width: 768px) {
     position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
+    right: ${(props) => (props.$toggle === true ? '0%' : '-100%')};
+    bottom: 22%;
+    width: 300px;
     padding: 1rem 1.65rem;
-    gap: 1rem;
-    background-color: #f6f6f6;
+    gap: 1.5rem;
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8));
     z-index: 1;
+    flex-direction: column;
   }
 `;
 
 const MenuItem = styled.div`
   position: relative;
   width: fit-content;
+  font-size: 1.3rem;
   padding: 0.3rem 0;
   font-weight: 600;
   color: var(--primary-color);
@@ -134,20 +140,47 @@ const UserIcon = styled.div`
 
 const UserName = styled.h3`
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 48%;
+  left: 48%;
   transform: translate(-50%, -50%);
-  font-size: larger;
+  font-size: 1.65rem;
+`;
+
+const MenuButton = styled.div`
+  width: 45px;
+  height: 45px;
+  border-radius: 9px;
+  background-color: white;
+  border: 3px solid var(--primary-color);
+  position: fixed;
+  bottom: 15.5%;
+  right: -1%;
+  z-index: 1;
+  padding-top: 0.8rem;
+  padding-left: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+  }
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 
 // Main Component
 export default function Header() {
-  // localStorage의 사용자 email, UID를 가져오는 것
-  const authHandler = new authStorage();
+  // Redux States
+  const reduxUser = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  // STATES
+  const [menuToggle, setMenuToggle] = useState(false);
 
   // 현재 로그인 유저 email, uid
-  const [curUserEmail, setCurUserEmail] = useState('');
-  const [curUserUid, setCurUserUid] = useState('');
+  const curUserInfo = useRef('');
 
   // Navigate Hook
   const navi = useNavigate();
@@ -156,59 +189,75 @@ export default function Header() {
   const [hasToken, setHasToken] = useState(false);
 
   // Styled-Components 반복 생성 시 사용하는 변수
-  const menu = ['Features', 'Pricing', 'Community', 'Support'];
+  const menu = ['Posts', 'Products', 'Community', 'Support'];
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
-  //////////////////////////////////////////////////////////////////
-  // localStorage의 데이터를 늦게 가져와서 UI가 안 바뀝니다. (미해결 문제)
-  //////////////////////////////////////////////////////////////////
+  // 초기 렌더 시 localStoragedp user데이터를 ref에 담아 로그인 유저 정보 유지
   useEffect(() => {
-    localStorage.getItem('token') !== null && setHasToken(true);
-    setCurUserEmail(authHandler.getEmail());
-    setCurUserUid(authHandler.getUid());
-  }, []);
+    if (localStorage.getItem('user') !== null) {
+      curUserInfo.current = JSON.parse(localStorage.getItem('user'));
+      setHasToken(true);
+    }
+  }, [reduxUser]);
+
+  // FUNCTIONS
+  const handleToggle = () => {
+    setMenuToggle((prev) => !prev);
+  };
 
   // 로그인 페이지로~
   const goLogin = (e) => {
     e.target.innerText === 'Log in' && navi('/login');
-    e.target.innerText === 'Register' && navi('/register');
+    e.target.innerText === 'Register' && navi('/signup');
+    setMenuToggle(false);
   };
 
   // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
   const logOut = () => {
     new tokenStorage().clearToken();
     setHasToken(false);
-    authHandler.clearEmail();
-    authHandler.clearUid();
+    localStorage.removeItem('user');
+    dispatch(remove_user());
     navi('/', { replace: true });
   };
 
   // 마이페이지로~
   const goMyPage = () => {
-    navi(`/mypage/${curUserUid}`);
+    const compared = bcrypt.compareSync(curUserInfo.current.uid, '');
+    navi(`/mypage/${compared}`);
+    setMenuToggle(false);
   };
 
   // 홈으로~
   const goHome = () => {
     navi('/');
+    setMenuToggle(false);
+  };
+
+  const menuNavi = (e) => {
+    e.target.innerText === 'Posts' && navi('/posts');
+    e.target.innerText === 'Products' && navi('/shop');
   };
 
   // user email을 받아와 반환합니다
   const returnUserName = () => {
-    return auth.currentUser?.email;
+    return curUserInfo.current.email;
   };
 
   // curUserEmail이 비어있지 않다면 Header의 UI가 나옵니다
-  if (curUserEmail !== '') {
-    return (
+
+  return (
+    <>
       <HeaderContainer>
         <Logo onClick={() => goHome()}>
           <img width="100px" src="/assets/images/logo.png" alt="" />
         </Logo>
-        <MenuContainer>
+        <MenuContainer $toggle={menuToggle}>
           {menu.map((menu) => (
-            <MenuItem key={menu}>{menu}</MenuItem>
+            <MenuItem onClick={menuNavi} key={menu}>
+              {menu}
+            </MenuItem>
           ))}
         </MenuContainer>
         <ButtonContainer>
@@ -219,7 +268,7 @@ export default function Header() {
                     {text}
                   </Button>
                   <UserIcon onClick={() => goMyPage()}>
-                    <UserName>{returnUserName()?.charAt(0)}</UserName>
+                    <UserName>{returnUserName().charAt(0)}</UserName>
                   </UserIcon>
                 </UserContainer>
               ))
@@ -230,6 +279,9 @@ export default function Header() {
               ))}
         </ButtonContainer>
       </HeaderContainer>
-    );
-  }
+      <MenuButton onClick={handleToggle}>
+        {menuToggle ? <FontAwesomeIcon icon={faClose} /> : <FontAwesomeIcon icon={faBars} />}
+      </MenuButton>
+    </>
+  );
 }
