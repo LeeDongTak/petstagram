@@ -1,7 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
-
+import { getAuth } from "firebase/auth";
+import { config } from "./config";
+// Your we b app's Firebase configuration
+// Initialize Firebase
 
 export const saveData = async (id, title, content) => {
   try {
@@ -14,6 +17,7 @@ export const saveData = async (id, title, content) => {
 
   } catch (e) {
     console.log('실패')
+    console.log(e.code);
     return null;
   }
 };
@@ -41,6 +45,7 @@ export const uploadImage = async (file) => {
     return null;
   }
 };
+
 const readFileAsDataURL = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -49,6 +54,7 @@ const readFileAsDataURL = (file) => {
     reader.readAsDataURL(file);
   });
 };
+
 export const fetchSinglePost = async (postId) => {
   try {
     const docRef = doc(db, "posts", postId);
@@ -66,14 +72,9 @@ export const fetchSinglePost = async (postId) => {
     return null;
   }
 };
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { config } from "./config";
-// Your we b app's Firebase configuration
-// Initialize Firebase
 
-const firebaseConfig = config.db.dbConfig
+
+const firebaseConfig = config.db.dbConfig;
 
 export const app = initializeApp(firebaseConfig);
 // Your web app's Firebase configuration

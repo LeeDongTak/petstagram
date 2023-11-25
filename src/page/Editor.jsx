@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { saveData, fetchData,uploadImage,fetchSinglePost } from '../fireBase';
+import { saveData, uploadImage, fetchSinglePost } from '../fireBase';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
@@ -9,14 +9,12 @@ import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetEditor, setContent,setTitle, } from '../redux/modules/actions';
+import { resetEditor, setContent, setTitle } from '../redux/modules/actions';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const PostingTitle = styled.div`
-/* 상단 제목 입력부분 스타일 */
-    input{
+  /* 상단 제목 입력부분 스타일 */
+  input {
     box-sizing: border-box;
     display: block;
     width: 100%;
@@ -29,88 +27,96 @@ const PostingTitle = styled.div`
     line-height: 40px;
     overflow: hidden;
     letter-spacing: -0.4px;
-    
-}
-  input:focus{
-    border : 1px solid #FF2E00; 
   }
-  img{
-  width: 30%;
-  height: 30%;
-  text-align: center;
-  }`
+  input:focus {
+    border: 1px solid #ff2e00;
+  }
+  img {
+    width: 30%;
+    height: 30%;
+    text-align: center;
+  }
+`;
 const EditContainer = styled.div`
-margin:  auto;
-margin-top: 150px;
-max-width: 700px;
-border : 1px solid #FF2E00; ;
-`
+  margin: auto;
+  margin-top: 150px;
+  max-width: 700px;
+  border: 1px solid #ff2e00;
+`;
 const EditBtn = styled.button`
-box-sizing: border-box;
-background-color:#FF2E00 ;
-width: 150px;
-margin-top: 5px;
-color: white;
-border: none;
-font-size: 20px;
-margin-left: 540px;
-border-radius: 5px;
-padding: 5px;
-
-`
-function EditorBox() {
+  box-sizing: border-box;
+  background-color: #ff2e00;
+  width: 150px;
+  margin-top: 5px;
+  color: white;
+  border: none;
+  font-size: 20px;
+  margin-left: 540px;
+  border-radius: 5px;
+  padding: 5px;
+`;
+export function EditorBox() {
   const dispatch = useDispatch();
-  const editorState = useSelector((state)=>state)
-  const editorRef =useRef();
-  const navigate = useNavigate();
-  const onChange= ()=>{
+  const editorState = useSelector((state) => state.editorReducer);
+  const editorRef = useRef();
+
+  // FUNCTIONS
+  const onChange = () => {
     const data = editorRef.current.getInstance().getHTML();
     dispatch(setContent(data));
     console.log(data);
-  }
+  };
+
   const onUploadImage = async (blob, callback) => {
     const url = await uploadImage(blob);
     console.log(blob);
     callback(url, 'alt text');
     return false;
   };
+
   const onSaveData = async () => {
-    await saveData(editorState.editId,editorState.editTitle, editorState.editorData);
+    await saveData(editorState.editId, editorState.editTitle, editorState.editorData);
     dispatch(resetEditor());
     fetchSinglePost();
     console.log('완료');
-    navigate(`/post/${editorState.editId}`)
+    // navigate(`/post/${editorState.editId}`);
     // const data = editorRef.current.getInstance().getHTML();
-    
+
     // // 서버로 데이터 전송
     // await saveData(editTitle, data);
   };
-  const [editTitle, editSetTitle] = useState('');
 
   return (
     <div>
       <EditContainer>
-      <PostingTitle><input type="text" value={editorState.editTitle} 
-       placeholder='제목입력하세요' onChange={(e) => dispatch(setTitle(e.target.value))}/></PostingTitle>
-      <Editor
-        initialValue=""
-        placeholder='내용 입력하세요'
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="wysiwyg"
-        useCommandShortcut={false}
-        language="ko-KR"
-        ref={editorRef}
-        onChange={onChange}
-        plugins={[colorSyntax]}
-        hooks={{
-          addImageBlobHook: onUploadImage
-        }}
-      />
-      <div><EditBtn onClick={onSaveData}>작 성 완 료</EditBtn></div>
+        <PostingTitle>
+          <input
+            type="text"
+            value={editorState.editTitle}
+            placeholder="제목을 입력하세요"
+            onChange={(e) => dispatch(setTitle(e.target.value))}
+          />
+        </PostingTitle>
+        <Editor
+          initialValue=""
+          placeholder="내용 입력하세요"
+          previewStyle="vertical"
+          height="600px"
+          initialEditType="wysiwyg"
+          useCommandShortcut={false}
+          language="ko-KR"
+          ref={editorRef}
+          onChange={onChange}
+          plugins={[colorSyntax]}
+          hooks={{
+            addImageBlobHook: onUploadImage
+          }}
+        />
+        <div>
+          <EditBtn onClick={onSaveData}>작 성 완 료</EditBtn>
+        </div>
       </EditContainer>
-
-      </div>
+    </div>
   );
 }
 
@@ -123,7 +129,6 @@ export default EditorBox;
 //   margin-bottom: 20px;
 // }
 // `;
-
 
 // `;
 // const EditContainer = styled.div`
@@ -177,8 +182,6 @@ export default EditorBox;
 // }
 // `;
 
-
-
 // // 게시글 툴바 목록
 // const toolbar =[ 'heading', '|',
 // 'bold', 'italic', 'underline', 'strikethrough', '|',
@@ -207,13 +210,13 @@ export default EditorBox;
 //     const reader = new FileReader();
 //     reader.onload = async(e) => {
 //       const imageUrl = e.target.result;
-     
+
 //       const postimg=await uploadImage(imageUrl);
 //       console.log('이미지업로드',postimg)
 //     }
 //     reader.readAsDataURL(file);
 //   };
-//   return ( 
+//   return (
 //     <EditContainer>
 //     <StyledEditorContainer >
 
@@ -225,7 +228,7 @@ export default EditorBox;
 //           onChange={(e) => {editSetTitle(e.target.value)
 //          console.log(editTitle)}}
 //         />
-  
+
 //       </PostingTitle>
 //     <CKEditor
 //         editor={ClassicEditor}
@@ -236,14 +239,14 @@ export default EditorBox;
 //         toolbar,
 //         }}
 //         onReady={ editor => {
-//             //에디터가 준비되면 호출되는 콜백            
+//             //에디터가 준비되면 호출되는 콜백
 //             console.log( '에디터 준비 완료', editor );
 //         } }
 //         onBlur={ ( event, editor ) => {
 //             console.log( 'Blur.', editor );
 //             editor.ui.view.editable.element.style.border = 'none';
 //         } }
-// 
+//
 //     />
 
 // </StyledEditorContainer>
@@ -254,4 +257,3 @@ export default EditorBox;
 // }
 
 // export default Editor
-

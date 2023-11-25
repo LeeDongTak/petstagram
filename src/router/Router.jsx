@@ -8,6 +8,7 @@ import Shop from '../page/Shop';
 import Footer from '../components/Footer';
 import Signup from '../page/Signup';
 import AddProfile from '../page/AddProfile';
+import WritePage from '../page/WritePage';
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/addprofile/:id" element={<AddProfile />} />
+        <Route path="/write" element={<WritePage />} />
         {/* <Route path="/shop/:productid" element={<Shop />} /> */}
       </Routes>
       <Footer />

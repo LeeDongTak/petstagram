@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import { FadeAni } from './MyPage';
 
 function Shop() {
-  const navi = useNavigate();
   const [products, setProducts] = useState([]);
   useEffect(() => {
     axios.get('/data/products.json').then((data) => {
@@ -33,7 +31,6 @@ function Shop() {
           </div>
         ))}
       </ShopWrap>
-      <Footer />
     </Wrap>
   );
 }
