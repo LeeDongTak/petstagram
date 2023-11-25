@@ -5,7 +5,7 @@ import addprofile from "../modules/addProfile";
 import addPetProfile from "../modules/addPetProfile";
 import { posts } from "../modules/posts";
 import { users } from "../modules/users";
-import dummyReducer from "../modules/dummy";
+
 import editorReducer from "../modules/reducer";
 
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MainBanner from '../components/MainBanner/MainBanner';
 import Recommend from '../components/Recommend/Recommend';
@@ -48,6 +48,16 @@ const PostList=styled.div`
 
 
 function Home() {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const postsData = await fetchData();
+      setPosts(postsData);
+    };
+    fetchPosts();
+  }, [posts])
+
+
   return (
     <div >  
    <HomeContainer>
