@@ -75,7 +75,7 @@ function LoginPage() {
           console.log(value);
           if (value.isConfirmed === true) {
             const user = {
-              uid: bcrypt.hashSync(유저인증토큰객체.user.uid, 10),
+              uid: 유저인증토큰객체.user.uid,
               email: 유저인증토큰객체.user.email,
               token: 유저인증토큰객체.user.accessToken
             };

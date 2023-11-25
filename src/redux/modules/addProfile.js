@@ -209,7 +209,7 @@ const addprofile = (state = initialState, action) => {
             // 스토리지에 이미지 저장
             const imageRef = ref(
               storage,
-              `${action.payload.id} / ${moment().format('YYYYMMDDHHMMSS')} / ${state.profileimg.name}`
+              `${action.payload.id}/${moment().format('YYYYMMDDHHMMSS')}/${state.profileimg.name}`
             );
             await uploadBytes(imageRef, state.profileimg);
             const downloadURL = await getDownloadURL(imageRef);

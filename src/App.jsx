@@ -1,13 +1,9 @@
-import Router from './router/Router';
+
+import Router from './page/Router';
 import GlobalStyle from './styled/GlobalStyle';
 
 function App() {
-  return (
-    <>
-      <GlobalStyle />
-      <Router />
-    </>
-  );
+  return <></>;
 }
 
 export default App;

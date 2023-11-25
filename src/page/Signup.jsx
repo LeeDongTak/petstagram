@@ -14,6 +14,7 @@ function Signup() {
   useEffect(()=>{
     emailRef.current.focus()
   },[])
+
   const emailHandler = (e) => {
     dispatch(emailChage(e.target.value));
   };

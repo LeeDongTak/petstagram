@@ -219,6 +219,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petLikeMsg: '좋아하는것을 입력해 주세요'
         };
       } else if (state.petLikeText.length > 5) {
@@ -229,6 +230,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petLikeMsg: '좋아하는것은 5글자 이하로 작성해 주세요'
         };
       } else if (state.petLike.length >= 5) {
@@ -239,6 +241,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petLikeMsg: '좋아하는것은 5개 까지 작성할 수 있습니다. '
         };
       } else {
@@ -273,6 +276,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petDisLikeMsg: '싫어하는것을 입력해 주세요'
         };
       } else if (state.petDisLikeText.length > 5) {
@@ -283,6 +287,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petDisLikeMsg: '싫어하는것은 5글자 이하로 작성해 주세요'
         };
       } else if (state.petDisLike.length >= 5) {
@@ -293,6 +298,7 @@ const addPetProfile = (state = initialState, action) => {
           petNameMsg: '', // 펫 이름 에러 메시지
           petIntroductionMsg: '', // 펫 소개 에러 메시지
           petKindsMsg: '',// 펫 종류 에러 메시지
+
           petDisLikeMsg: '싫어하는것은 5개 까지 작성할 수 있습니다. '
         };
       } else {
