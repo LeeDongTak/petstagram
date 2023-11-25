@@ -17,8 +17,12 @@ const rootreducer = combineReducers({
   users
 })
 
-const store = createStore(rootreducer)
-const store = createStore(editorReducer);
+const rootReducer = combineReducers({
+  root: rootreducer,
+  editor: editorReducer,
+});
+const store = createStore(rootReducer)
+
 
 
 export default store
