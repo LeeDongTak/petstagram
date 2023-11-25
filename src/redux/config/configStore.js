@@ -6,6 +6,9 @@ import addPetProfile from "../modules/addPetProfile";
 import { posts } from "../modules/posts";
 import { users } from "../modules/users";
 
+import editorReducer from "../modules/reducer";
+
+
 const rootreducer = combineReducers({
   signup,
   addprofile,
@@ -14,7 +17,12 @@ const rootreducer = combineReducers({
   users
 })
 
-const store = createStore(rootreducer)
+const rootReducer = combineReducers({
+  root: rootreducer,
+  editor: editorReducer,
+});
+const store = createStore(rootReducer)
+
 
 
 export default store
