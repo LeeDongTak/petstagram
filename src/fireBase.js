@@ -8,6 +8,7 @@ import { config } from "./config";
 
 const firebaseConfig = config.db.dbConfig
 
+
 export const app = initializeApp(firebaseConfig);
 // Your web app's Firebase configuration
 
@@ -23,3 +24,4 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
+

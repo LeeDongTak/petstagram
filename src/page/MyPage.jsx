@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Tabs from '../components/mypage/Tabs';
 import OwnerProfile from '../components/mypage/OwnerProfile';
@@ -19,7 +20,6 @@ function MyPage() {
 
   // STATES
   const [post, setPost] = useState([]);
-  const [username, setUserName] = useState(''); // 프로필 사용자 이름
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -50,8 +50,10 @@ function MyPage() {
   }, []);
   console.log(post);
 
-  // 게시물을 현재 사용자의 id와 같은 것들로 보여주기 위한 filter
-  const filteredData = post?.filter((post) => post.uid === id);
+
+  // 현재 사용자의 게시물 필터
+  const filteredData = post.filter((post) => post.uid === id);
+
   console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
@@ -62,35 +64,32 @@ function MyPage() {
     fetchUserInfo();
   }, []);
 
+
   return (
     <>
       <Tabs onClickTab={onActiveTab} activeTab={activeTab}></Tabs>
-      <MyPageContainer>
-        {activeTab === '프로필' ? (
-          <ProfileContainer>
-            <OwnerProfile username={username}></OwnerProfile>
-            <PetProfileContainer>
-              <PetProfile></PetProfile>
-              <PetProfile></PetProfile>
-              <PetProfile></PetProfile>
-              <PetProfile></PetProfile>
-            </PetProfileContainer>
-          </ProfileContainer>
-        ) : (
-          filteredData?.map((item) => {
-            return (
-              <MyPosts item={item}></MyPosts>
-              // <MyPosts
-              //   title={item.title}
-              //   content={item.content}
-              //   uid={item.uid}
-              //   postId={item.id}
-              //   setPost={setPost}
-              // ></MyPosts>
-            );
-          })
-        )}
-      </MyPageContainer>
+      {activeTab === '프로필' ? (
+        <ProfileContainer>
+          <OwnerProfile></OwnerProfile>
+          <PetProfileContainer>
+            <PetProfile></PetProfile>
+          </PetProfileContainer>
+        </ProfileContainer>
+      ) : (
+        filteredData.map((item) => {
+          return (
+            <MyPosts
+              title={item.title}
+              content={item.content}
+              uid={item.uid}
+              postId={item.id}
+              post={post}
+              setPost={setPost}
+            ></MyPosts>
+          );
+        })
+      )}
+
     </>
   );
 }
@@ -151,10 +150,3 @@ const PetProfileContainer = styled.div`
   padding: 1rem;
   border-radius: 9px;
 `;
-
-// ! 목욜, 금욜 투두
-// ✅ 게시물 삭제
-// 게시물 수정
-// 프로필 사진 업로드 및 내용 수정
-// redux로 리펙토링
-// UI 수정 - 폰트, 색상, 쉐도우 등드으드으으
