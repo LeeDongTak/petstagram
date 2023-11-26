@@ -12,6 +12,10 @@ import WritePage from '../page/WritePage';
 import Feeds from '../page/Feeds';
 import Follow from '../page/Follow';
 import GlobalStyle from '../styled/GlobalStyle';
+import MainDetail from '../components/MainDetail/MainDetail';
+import ProductDetail from '../components/ProductDetail/ProductDetail';
+import EditProfile from '../components/EditProfile/EditProfile';
+import Post from '../page/Post';
 
 function Router() {
   return (
@@ -22,13 +26,19 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/mypage/:id" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/shop" element={<Shop />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/addprofile/:id" element={<AddProfile />} />
         <Route path="/write" element={<WritePage />} />
-        {/* <Route path="/shop/:productid" element={<Shop />} /> */}
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/posts" element={<Feeds />} />
+<<<<<<< HEAD
         <Route path="/follow" element={<Follow />} />
+=======
+        <Route path="/maindetail" element={<MainDetail />} />
+        <Route path="/edit-profile/:id" element={<EditProfile />} />
+        <Route path="/post/:id" element={<Post />} />
+>>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
       </Routes>
       <Footer />
     </BrowserRouter>

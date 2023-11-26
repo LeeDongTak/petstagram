@@ -1,14 +1,22 @@
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 function Tabs({ onClickTab, activeTab }) {
+  const navi = useNavigate();
+  const { id } = useParams();
+
+  const goWritePage = (e) => {
+    e.target.innerText === '게시글 작성' && navi('/write');
+    e.target.innerText === '프로필 수정' && navi(`/edit-profile/${id}`);
+  };
   return (
     <TabWrapper>
       <TabContainer onClick={onClickTab} r>
         <TabList $activeTab={activeTab}>프로필</TabList>
         <TabList $activeTab={activeTab}>내 게시글</TabList>
       </TabContainer>
-      <button>{activeTab === '프로필' ? '프로필 수정' : '게시글 작성'}</button>
+      <button onClick={goWritePage}>{activeTab === '프로필' ? '프로필 수정' : '게시글 작성'}</button>
     </TabWrapper>
   );
 }

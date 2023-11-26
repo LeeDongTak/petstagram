@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import { v4 } from 'uuid';
 import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
 import PostImages from './PostImages';
+<<<<<<< HEAD
+=======
+import parse from 'html-react-parser';
+>>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
@@ -98,6 +102,11 @@ function MyPosts({ title, content, postId, setPost }) {
       });
     });
   };
+<<<<<<< HEAD
+=======
+
+  console.log(parse(content));
+>>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 
   return (
     <MyPostsContainer>
@@ -106,7 +115,7 @@ function MyPosts({ title, content, postId, setPost }) {
           <PostContainer>
             <PostInfo>
               <h3>{title}</h3>
-              <p>{content}</p>
+              <p>{parse(content)}</p>
               <PostImageContainer>
                 <PostImages imageList={imageList} deleteImage={deleteImage} isEditing={isEditing}></PostImages>
               </PostImageContainer>
@@ -127,7 +136,7 @@ function MyPosts({ title, content, postId, setPost }) {
                 id=""
                 cols="30"
                 rows="10"
-                defaultValue={content}
+                defaultValue={parse(content)}
                 onChange={onChangeEditContent}
               ></textarea>
               <InputAndButtonWrapper>
@@ -196,7 +205,6 @@ const ButtonWrapper = styled.div`
     cursor: pointer;
   }
 `;
-
 
 const InputAndButtonWrapper = styled.div`
   display: flex;

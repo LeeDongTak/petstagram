@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import { FadeAni } from './MyPage';
+import { Link } from 'react-router-dom';
 
 function Shop() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    axios.get('/data/products.json').then((data) => {
-      setProducts(data.data.products);
+    axios.get('/data/products.json').then((response) => {
+      setProducts(response.data.products);
     });
   }, [setProducts]);
   console.log(products);
@@ -18,19 +20,22 @@ function Shop() {
       <Title>STORE</Title>
       <ShopWrap>
         {products.map((product) => (
-          <div key={product.id}>
+          <Link to={`/shop/${product.id}`} key={product.id} style={{ textDecoration: 'none', color: 'black' }}>
             <div>
-              <ProductImage src={product.image} alt={product.name} />
+              <div>
+                <ProductImage src={product.image} alt={product.name} />
+              </div>
+              <ProductTitle>{product.name}</ProductTitle>
+              <PriceWrap>
+                <Price>{product.price}</Price>
+                <PriceRate>{product.discountRate}</PriceRate>
+              </PriceWrap>
+              <RegularPrice>{product.RatePrice}</RegularPrice>
             </div>
-            <ProductTitle>{product.name}</ProductTitle>
-            <PriceWrap>
-              <Price>{product.price}</Price>
-              <PriceRate>{product.discountRate}</PriceRate>
-            </PriceWrap>
-            <RegularPrice>{product.RatePrice}</RegularPrice>
-          </div>
+          </Link>
         ))}
       </ShopWrap>
+      <Footer />
     </Wrap>
   );
 }
@@ -40,21 +45,18 @@ function Shop() {
 
 //전체랩
 const Wrap = styled.div`
+  padding: 10px;
   margin-top: 10px;
   max-width: 1200px;
-  max-height: 550px;
   margin: 0 auto;
   animation: ${FadeAni} 0.4s forwards;
-  @media screen and (max-width: 768px) {
-    padding-bottom: 12rem;
-  }
 `;
 
 //타이틀
 const Title = styled.div`
   margin-top: 20px;
   margin-left: 20px;
-  font-size: 40px;
+  font-size: 20px;
   font-weight: bold;
   color: #ff5036;
 `;
@@ -100,6 +102,7 @@ const ProductTitle = styled.div`
 //가격 랩
 const PriceWrap = styled.div`
   display: flex;
+  space-between: 10px;
 `;
 
 //할인 가격

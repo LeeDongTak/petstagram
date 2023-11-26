@@ -1,38 +1,37 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 import { config } from "./config";
-
+import { v4 as uuid } from 'uuid'
 
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
-export const saveData = async (id, title, content) => {
+export const saveData = async (uid, title, content) => {
   try {
     const docRef = await addDoc(collection(db, "posts"), {
-      id,
+      uid: uid,
       title,
-      content
+      content,
+      cid: uuid()
     });
     console.log('제목,내용 저장', docRef.id);
-
   } catch (e) {
-    console.log('실패')
+    console.log('실패');
     console.log(e.code);
     return null;
   }
 };
 
 export const fetchData = async () => {
-  const snapshot = await getDocs(collection(db, "posts"));
+  const snapshot = await getDocs(collection(db, 'posts'));
   const posts = [];
   snapshot.forEach((doc) => {
     posts.push({ id: doc.id, ...doc.data() });
   });
   return posts;
 };
-
 
 export const uploadImage = async (file) => {
   try {
@@ -57,24 +56,6 @@ const readFileAsDataURL = (file) => {
   });
 };
 
-export const fetchSinglePost = async (postId) => {
-  try {
-    const docRef = doc(db, "posts", postId);
-    const docSnap = await getDocs(docRef);
-
-    if (docSnap.exists()) {
-      return docSnap.data();
-
-    } else {
-      console.log("No such document!");
-      return null;
-    }
-  } catch (error) {
-    console.error('에러실패', error);
-    return null;
-  }
-};
-
 
 // const firebaseConfig = config.db.dbConfig;
 
@@ -89,9 +70,21 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 
+<<<<<<< HEAD
+=======
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Initialize Firebase
+
+// Initialize FireStore
+>>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 // Create a storage reference from our storage service
