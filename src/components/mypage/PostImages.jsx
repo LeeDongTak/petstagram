@@ -5,6 +5,7 @@ function PostImages({ imageList, deleteImage, isEditing }) {
   return (
     <PostImageContainer>
       {imageList.map((url) => {
+
         console.log(url);
         return (
           <div>

@@ -49,8 +49,8 @@ export default function Recommend() {
   // - RecommendGrid 컴포넌트로 전달해줍니다.
   // - 데이터의 categoryCode 값에 따라 filter가 됩니다.
   // - (예. 산책 관련, 애견동반 관련)
-  const filteredByWalk = reduxData?.filter((post) => post.categoryCode === '0001');
-  const filteredByPlace = reduxData?.filter((post) => post.categoryCode === '0002');
+  const filteredByWalk = reduxData[0]?.filter((post) => post.categoryCode === '0001');
+  const filteredByPlace = reduxData[0]?.filter((post) => post.categoryCode === '0002');
 
   // UI 생성 시 필요한 데이터를 추가하기 위함 (사용 안 함)
   // useEffect(() => {

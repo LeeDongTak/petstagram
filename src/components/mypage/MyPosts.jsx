@@ -6,6 +6,7 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import PostImages from './PostImages';
 
+
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
   const [imageUpload, setImageUpload] = useState(null); // 업로드할 이미지
@@ -31,16 +32,27 @@ function MyPosts({ title, content, postId, setPost }) {
   };
 
   // 게시물 삭제 핸들러
+
+  // FUNCTIONS
+  // 게시물 삭제
+
   const deletePostHandler = async () => {
     const docRef = doc(db, 'posts', postId);
     await deleteDoc(docRef);
-
     setPost((prev) => {
       return prev.filter((el) => el.id !== postId);
     });
   };
 
   // 게시물 수정 핸들러
+  const onChangeEditTitle = (e) => {
+    setEditingTitle(e.target.value);
+  };
+
+  const onChangeEditContent = (e) => {
+    setEditingContent(e.target.value);
+  };
+
   const editPostHandler = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'posts', postId);
@@ -69,11 +81,53 @@ function MyPosts({ title, content, postId, setPost }) {
     listAll(imageFolderRef).then((res) => {
       res.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
+    // Firestore에서 업데이트
+    await updateDoc(docRef, updatedData);
+
+    setPost((prev) => {
+      return prev.map((p) => {
+        if (p.id === postId) {
+          return { ...p, updatedData }; // 기존 포스트와 업데이트된 데이터 병합
+        } else {
+          return p;
+        }
+      });
+    });
+
+    // 이미지 업로드
+    uploadImage();
+    setIsEditig(false);
+  };
+
+  // 이미지 업로드 함수
+  const uploadImage = () => {
+    if (imageUpload === null) return;
+    const imageRef = ref(storage, `${postId}/${v4()}`);
+    uploadBytes(imageRef, imageUpload).then(() => {
+      alert('이미지가 성공적으로 업로드 되었습니다.');
+    });
+  };
+
+  const showEditPostHandler = () => {
+    setIsEditig(true);
+  };
+
+  const cancelEditPostHandler = () => {
+    setIsEditig(false);
+  };
+
+  const IMAGE_FOLDER = ref(storage, `${postId}`);
+
+  useEffect(() => {
+    listAll(IMAGE_FOLDER).then((res) => {
+      res.items.forEach((image) => {
+        getDownloadURL(image).then((url) => {
           setImageList((prev) => [...prev, url]);
         });
       });
     });
   }, []);
+
 
   // 게시물 수정할 때 이미지 업로드 핸들러
   const uploadImage = () => {
@@ -105,9 +159,6 @@ function MyPosts({ title, content, postId, setPost }) {
               console.log(error);
             });
         }
-      });
-    });
-  };
 
   return (
     <MyPostsContainer>
@@ -140,6 +191,7 @@ function MyPosts({ title, content, postId, setPost }) {
                 defaultValue={content}
                 onChange={onChangeEditContent}
               ></textarea>
+
               <InputAndButtonWrapper>
                 <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
                 <button onClick={uploadImage}>업로드 이미지</button>
@@ -159,8 +211,7 @@ function MyPosts({ title, content, postId, setPost }) {
   );
 }
 
-export default MyPosts;
-
+// STYLED-COMPONENTS
 const MyPostsContainer = styled.div`
   margin-bottom: 20px;
   display: flex;
@@ -208,6 +259,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
+
 const InputAndButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -232,3 +284,5 @@ const PostImageContainer = styled.div`
     height: 100px;
   }
 `;
+
+export default MyPosts;
