@@ -11,6 +11,8 @@ import AddProfile from '../page/AddProfile';
 import WritePage from '../page/WritePage';
 import Feeds from '../page/Feeds';
 import GlobalStyle from '../styled/GlobalStyle';
+import MainDetail from '../components/MainDetail/MainDetail';
+import ProductDetail from '../components/ProductDetail/ProductDetail';
 
 function Router() {
   return (
@@ -21,12 +23,13 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/mypage/:id" element={<MyPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/shop" element={<Shop />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/addprofile/:id" element={<AddProfile />} />
         <Route path="/write" element={<WritePage />} />
-        {/* <Route path="/shop/:productid" element={<Shop />} /> */}
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/posts" element={<Feeds />} />
+        <Route path="/maindetail" element={<MainDetail />} />
       </Routes>
       <Footer />
     </BrowserRouter>
