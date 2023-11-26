@@ -52,6 +52,7 @@ function MyPage() {
         filteredData.map((item) => {
           return (
             <MyPosts
+              key={item.id}
               title={item.title}
               content={item.content}
               uid={item.uid}

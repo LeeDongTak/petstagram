@@ -8,21 +8,12 @@ import PostImages from './PostImages';
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
-  const [imageUpload, setImageUpload] = useState(null);
+  const [imageUpload, setImageUpload] = useState(null); // 업로드할 이미지
   const [imageList, setImageList] = useState([]);
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
 
-  // 이미지 랜더
-  useEffect(() => {
-    listAll(imageFolder).then((res) => {
-      res.items.forEach((image) => {
-        getDownloadURL(image).then((url) => {
-          setImageList((prev) => [...prev, url]);
-        });
-      });
-    });
-  }, []);
+  // 게시물 수정에 필요한 핸들러들
   const showEditPostHandler = () => {
     setIsEditig(true);
   };
@@ -72,71 +63,50 @@ function MyPosts({ title, content, postId, setPost }) {
     }
   };
 
+  const imageFolderRef = ref(storage, postId);
+
+  useEffect(() => {
+    listAll(imageFolderRef).then((res) => {
+      res.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setImageList((prev) => [...prev, url]);
+        });
+      });
+    });
+  }, []);
+
   // 게시물 수정할 때 이미지 업로드 핸들러
-  const imageFolder = ref(storage, `${postId}`);
+  const uploadImage = () => {
+    if (imageUpload === null) return; // 업로드할 이미지 없을 시 아무것도 반환하지 않음
 
-  const uploadImage = async (e) => {
-    e.preventDefault();
-    if (imageUpload === null) {
-      return alert('이미지를 추가해주세요.');
-    } else {
-      try {
-        const imageRef = ref(storage, `${postId}/${v4()}`);
-        await uploadBytes(imageRef, imageUpload);
-
-        await getImages();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-
-  const getImages = async () => {
-    try {
-      const res = await listAll(imageFolder);
-      res.items.forEach(async (image) => {
-        const url = await getDownloadURL(image);
+    // storage 레퍼런스 (업로드 장소(폴더))
+    const imageRef = ref(storage, `${postId}/${imageUpload.name + v4()}`);
+    // 폴더에 파일 인풋에 업로드한 이미지파일 저장
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
         setImageList((prev) => [...prev, url]);
+        alert('이미지가 성공적으로 업로드 되었습니다.');
       });
-    } catch (err) {
-      console.error(err);
-    }
+    });
   };
 
-  const deleteImage = async () => {
-    try {
-      const res = await listAll(imageFolder);
-
-      // Create an array to store promises for all delete operations
-      const deletePromises = res.items.map((image) => {
-        const desertRef = ref(storage, image.fullPath);
-
-        // Delete the file
-        return deleteObject(desertRef);
+  // 이미지 삭제 핸들러
+  const deleteImage = (url) => {
+    listAll(imageFolderRef).then((res) => {
+      res.items.forEach((item) => {
+        const bucketRef = ref(storage, `gs://${item.bucket}/${item.fullPath}`);
+        if (url.includes(bucketRef.name)) {
+          deleteObject(bucketRef)
+            .then(() => {
+              setImageList(imageList.filter((post) => !post.includes(url)));
+              alert('이미지가 삭제되었습니다.');
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       });
-
-      // Wait for all delete operations to complete
-      await Promise.all(deletePromises);
-
-      // After all images are deleted, update the image list in the state
-      await getImagesDelete();
-      alert('이미지가 삭제되었습니다.');
-    } catch (error) {
-      console.error('Error deleting images:', error);
-      alert('다시 시도해 주세요.');
-    }
-  };
-
-  const getImagesDelete = async () => {
-    try {
-      const res = await listAll(imageFolder);
-      const urls = await Promise.all(res.items.map((image) => getDownloadURL(image)));
-
-      // Update the state with the new image list
-      setImageList(urls);
-    } catch (err) {
-      console.error('Error getting images:', err);
-    }
+    });
   };
 
   return (
