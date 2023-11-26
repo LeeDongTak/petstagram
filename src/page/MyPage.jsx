@@ -52,6 +52,7 @@ function MyPage() {
 
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
+
   console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
@@ -65,29 +66,29 @@ function MyPage() {
   return (
     <>
       <Tabs onClickTab={onActiveTab} activeTab={activeTab}></Tabs>
-      <MyPageContainer>
-        {activeTab === '프로필' ? (
-          <ProfileContainer>
-            <OwnerProfile></OwnerProfile>
-            <PetProfileContainer>
-              <PetProfile></PetProfile>
-            </PetProfileContainer>
-          </ProfileContainer>
-        ) : (
-          filteredData?.map((item) => {
-            return (
-              <MyPosts
-                title={item.title}
-                content={item.content}
-                uid={item.uid}
-                postId={item.id}
-                post={post}
-                setPost={setPost}
-              ></MyPosts>
-            );
-          })
-        )}
-      </MyPageContainer>
+
+      {activeTab === '프로필' ? (
+        <ProfileContainer>
+          <OwnerProfile></OwnerProfile>
+          <PetProfileContainer>
+            <PetProfile></PetProfile>
+          </PetProfileContainer>
+        </ProfileContainer>
+      ) : (
+        filteredData.map((item) => {
+          return (
+            <MyPosts
+              key={item.id}
+              title={item.title}
+              content={item.content}
+              uid={item.uid}
+              postId={item.id}
+              post={post}
+              setPost={setPost}
+            ></MyPosts>
+          );
+        })
+      )}
     </>
   );
 }

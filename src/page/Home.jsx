@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useEffect } from 'react';
+import styled from 'styled-components';
 import MainBanner from '../components/MainBanner/MainBanner';
 import Recommend from '../components/Recommend/Recommend';
 import Products from '../components/Products/Products';

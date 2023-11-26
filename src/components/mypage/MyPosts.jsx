@@ -6,21 +6,21 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import PostImages from './PostImages';
 
-function MyPosts({ title, content, postId, setPost, post }) {
+
+function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
-  const [imageUpload, setImageUpload] = useState(null);
+  const [imageUpload, setImageUpload] = useState(null); // 업로드할 이미지
   const [imageList, setImageList] = useState([]);
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
 
-  // FUNCTIONS
-  // 게시물 삭제
-  const deletePostHandler = async () => {
-    const docRef = doc(db, 'posts', postId);
-    await deleteDoc(docRef);
-    setPost((prev) => {
-      return prev.filter((el) => el.id !== postId);
-    });
+  // 게시물 수정에 필요한 핸들러들
+  const showEditPostHandler = () => {
+    setIsEditig(true);
+  };
+
+  const cancelEditPostHandler = () => {
+    setIsEditig(false);
   };
 
   const onChangeEditTitle = (e) => {
@@ -31,7 +31,28 @@ function MyPosts({ title, content, postId, setPost, post }) {
     setEditingContent(e.target.value);
   };
 
-  // 게시물 수정
+  // 게시물 삭제 핸들러
+
+  // FUNCTIONS
+  // 게시물 삭제
+
+  const deletePostHandler = async () => {
+    const docRef = doc(db, 'posts', postId);
+    await deleteDoc(docRef);
+    setPost((prev) => {
+      return prev.filter((el) => el.id !== postId);
+    });
+  };
+
+  // 게시물 수정 핸들러
+  const onChangeEditTitle = (e) => {
+    setEditingTitle(e.target.value);
+  };
+
+  const onChangeEditContent = (e) => {
+    setEditingContent(e.target.value);
+  };
+
   const editPostHandler = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'posts', postId);
@@ -45,6 +66,21 @@ function MyPosts({ title, content, postId, setPost, post }) {
       updatedData.content = editingContent;
     }
 
+    try {
+      await updateDoc(docRef, updatedData);
+      setPost((prev) => prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p)));
+      setIsEditig(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const imageFolderRef = ref(storage, postId);
+
+  useEffect(() => {
+    listAll(imageFolderRef).then((res) => {
+      res.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
     // Firestore에서 업데이트
     await updateDoc(docRef, updatedData);
 
@@ -92,28 +128,37 @@ function MyPosts({ title, content, postId, setPost, post }) {
     });
   }, []);
 
-  // 이미지 삭제
-  //gs://album-6d914.appspot.com/NRPxRcnLzup3up9tR0hI/2cdb0b77-c066-4004-8c01-f4c804f5781f
-  //gs://album-6d914.appspot.com/NRPxRcnLzup3up9tR0hI/b5c5ee7d-0cd0-430c-8c34-317b38f09cf8
-  //'NRPxRcnLzup3up9tR0hI/04194320-15a4-42ca-af78-c1ed972e03d6'
 
-  const deleteImage = () => {
-    listAll(IMAGE_FOLDER).then((res) => {
-      res.items.forEach((image) => {
-        const desertRef = ref(storage, image.fullPath);
+  // 게시물 수정할 때 이미지 업로드 핸들러
+  const uploadImage = () => {
+    if (imageUpload === null) return; // 업로드할 이미지 없을 시 아무것도 반환하지 않음
 
-        console.log(desertRef);
-        // Delete the file
-        deleteObject(desertRef)
-          .then(() => {
-            alert('이미지가 삭제되었습니다.');
-          })
-          .catch((error) => {
-            alert('다시 시도해 주세요.');
-          });
+    // storage 레퍼런스 (업로드 장소(폴더))
+    const imageRef = ref(storage, `${postId}/${imageUpload.name + v4()}`);
+    // 폴더에 파일 인풋에 업로드한 이미지파일 저장
+    uploadBytes(imageRef, imageUpload).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImageList((prev) => [...prev, url]);
+        alert('이미지가 성공적으로 업로드 되었습니다.');
       });
     });
   };
+
+  // 이미지 삭제 핸들러
+  const deleteImage = (url) => {
+    listAll(imageFolderRef).then((res) => {
+      res.items.forEach((item) => {
+        const bucketRef = ref(storage, `gs://${item.bucket}/${item.fullPath}`);
+        if (url.includes(bucketRef.name)) {
+          deleteObject(bucketRef)
+            .then(() => {
+              setImageList(imageList.filter((post) => !post.includes(url)));
+              alert('이미지가 삭제되었습니다.');
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
 
   return (
     <MyPostsContainer>
@@ -146,7 +191,11 @@ function MyPosts({ title, content, postId, setPost, post }) {
                 defaultValue={content}
                 onChange={onChangeEditContent}
               ></textarea>
-              <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
+
+              <InputAndButtonWrapper>
+                <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
+                <button onClick={uploadImage}>업로드 이미지</button>
+              </InputAndButtonWrapper>
               <PostImageContainer>
                 <PostImages imageList={imageList} deleteImage={deleteImage} isEditing={isEditing}></PostImages>
               </PostImageContainer>
@@ -191,13 +240,6 @@ const PostInfo = styled.div`
   width: 720px;
 `;
 
-const PostTitle = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-`;
-
-const PostContent = styled.p``;
-
 const ButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -205,6 +247,22 @@ const ButtonWrapper = styled.div`
   align-items: center;
   gap: 10px;
 
+  & button {
+    background-color: #ff5036;
+    border: 1px solid #ff5036;
+    padding: 5px 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bolder;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+`;
+
+
+const InputAndButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
   & button {
     background-color: #ff5036;
     border: 1px solid #ff5036;

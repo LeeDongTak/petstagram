@@ -32,13 +32,11 @@ export default PetProfile;
 const PetProfileContainer = styled.div`
   border: 1px solid #c6c6c6;
   display: flex;
-
   margin: auto;
   align-items: center;
   padding: 1.25rem 3rem 1.25rem 1.25rem;
   width: 100%;
   max-width: 900px;
-
   border-radius: 10px;
   border: 1px solid black;
 

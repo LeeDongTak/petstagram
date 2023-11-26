@@ -4,6 +4,7 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 import { getAuth } from "firebase/auth";
 import { config } from "./config";
 
+
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
@@ -81,7 +82,6 @@ export const app = initializeApp(firebaseConfig);
 // Your web app's Firebase configuration
 
 
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -92,3 +92,6 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
+export const storage = getStorage(app);
+
+// Create a storage reference from our storage service

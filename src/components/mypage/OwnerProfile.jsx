@@ -36,7 +36,6 @@ export default OwnerProfile;
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-
   border-right: 1px solid #c6c6c6;
   width: 300px;
   padding: 55px;

@@ -5,10 +5,12 @@ function PostImages({ imageList, deleteImage, isEditing }) {
   return (
     <PostImageContainer>
       {imageList.map((url) => {
+
+        console.log(url);
         return (
           <div>
             <img src={url} alt="게시글 이미지" />
-            {!isEditing ? null : <button onClick={deleteImage}>X</button>}
+            {!isEditing ? null : <button onClick={() => deleteImage(url)}>X</button>}
           </div>
         );
       })}
