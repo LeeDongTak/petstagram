@@ -22,7 +22,7 @@ function MyPage() {
   // STATES
   const [post, setPost] = useState([]);
   const [userName, setUserName] = useState('');
-  const [pets, setPets] = useState();
+  const [pets, setPets] = useState([]);
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -58,7 +58,10 @@ function MyPage() {
           const data = { id: pet.id, ...pet.data() };
           initialPets.push(data);
         });
-        setPets(initialPets?.filter((el) => el.masterId === id));
+        let resultPet = initialPets?.filter((el) => el.masterId === id)
+
+        console.log(initialPets)
+        setPets(resultPet);
       } catch (error) {
         console.log(error);
       }
@@ -66,7 +69,7 @@ function MyPage() {
     user();
     fetchData();
   }, []);
-
+console.log(pets)
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
 
