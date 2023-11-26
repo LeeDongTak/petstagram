@@ -22,6 +22,7 @@ function MyPage() {
   // STATES
   const [post, setPost] = useState([]);
   const [userName, setUserName] = useState('');
+  const [pets, setPets] = useState();
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -48,9 +49,23 @@ function MyPage() {
         console.log(err);
       }
     };
+    const user = async () => {
+      try {
+        const q = query(collection(db, 'myPet'));
+        const querySnapshot = await getDocs(q);
+        const initialPets = [];
+        querySnapshot.forEach((pet) => {
+          const data = { id: pet.id, ...pet.data() };
+          initialPets.push(data);
+        });
+        setPets(initialPets?.filter((el) => el.masterId === id));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    user();
     fetchData();
   }, []);
-  console.log(post);
 
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
@@ -73,7 +88,9 @@ function MyPage() {
         <ProfileContainer>
           <OwnerProfile></OwnerProfile>
           <PetProfileContainer>
-            <PetProfile></PetProfile>
+            {pets.map((item) => {
+              return <PetProfile key={item.id} petData={item}></PetProfile>;
+            })}
           </PetProfileContainer>
         </ProfileContainer>
       ) : (

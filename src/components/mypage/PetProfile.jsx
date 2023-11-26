@@ -1,25 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 
-function PetProfile() {
+function PetProfile({petData}) {
   return (
     <PetProfileContainer>
       <PetImageContainer>
         <img
-          src="https://images.unsplash.com/photo-1530041539828-114de669390e?q=80&w=2187&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={petData.petimgURL}
           alt=""
         />
-        <PetNameAgeGender>호두 / 3세 / 암컷</PetNameAgeGender>
+        <PetNameAgeGender>{`${petData.petname} / ${petData.petAge}세 / ${petData.petGender}`}</PetNameAgeGender>
       </PetImageContainer>
 
       <PetInfo>
-        <PetIntro>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Debitis ipsam esse, deleniti est totam maxime enim
-          quae porro, sed eos sapiente. Alias voluptatem sequi ratione! Architecto amet atque itaque id?
-        </PetIntro>
-        <PetLike>좋아하는 것: 산책, 간식</PetLike>
-        <PetUnlike>싫어하는 것: 가만히 있기, 배고픔</PetUnlike>
-        <PetCharaterastic>성격: 활발</PetCharaterastic>
+        <PetIntro>{petData.petIntroduction}</PetIntro>
+        <PetLike>좋아하는 것: {petData.petLike.map((item)=> <span>{item}</span> )}</PetLike>
+        <PetUnlike>싫어하는 것: {petData.petDisLike.map((item)=> <span>{item}</span> )}</PetUnlike>
       </PetInfo>
     </PetProfileContainer>
   );

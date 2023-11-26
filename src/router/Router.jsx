@@ -32,13 +32,10 @@ function Router() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/posts" element={<Feeds />} />
-<<<<<<< HEAD
         <Route path="/follow" element={<Follow />} />
-=======
         <Route path="/maindetail" element={<MainDetail />} />
         <Route path="/edit-profile/:id" element={<EditProfile />} />
         <Route path="/post/:id" element={<Post />} />
->>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
       </Routes>
       <Footer />
     </BrowserRouter>

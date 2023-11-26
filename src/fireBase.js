@@ -70,21 +70,9 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 
-<<<<<<< HEAD
-=======
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Initialize Firebase
-
-// Initialize FireStore
->>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 // Create a storage reference from our storage service

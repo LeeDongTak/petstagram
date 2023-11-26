@@ -5,10 +5,7 @@ import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
 import PostImages from './PostImages';
-<<<<<<< HEAD
-=======
 import parse from 'html-react-parser';
->>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
@@ -102,11 +99,6 @@ function MyPosts({ title, content, postId, setPost }) {
       });
     });
   };
-<<<<<<< HEAD
-=======
-
-  console.log(parse(content));
->>>>>>> 4f9b00ff0976ac89bfd15f32038567e00099a5b8
 
   return (
     <MyPostsContainer>
