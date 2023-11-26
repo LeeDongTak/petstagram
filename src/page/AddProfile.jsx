@@ -45,6 +45,7 @@ export default AddProfile;
 const StAddProfileWrap = styled.div`
   width: 100%;
   height: 120vh;
+  font-size: 12px;
 `;
 
 const StAddProfileContainer = styled.div`

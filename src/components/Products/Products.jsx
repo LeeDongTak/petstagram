@@ -9,9 +9,12 @@ const ProductSection = styled.div`
 `;
 
 const ProductContainer = styled.div`
-  padding: 1.5rem 15rem;
+  padding: 1rem 15rem 12rem 15rem;
+  @media screen and (max-width: 1400px) {
+    padding: 1.5rem 3rem 9rem 2rem;
+  }
   @media screen and (max-width: 960px) {
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem 12rem 2rem;
   }
 `;
 
@@ -20,7 +23,9 @@ const ProductTitle = styled.div`
   align-items: baseline;
   gap: 1rem;
   width: fit-content;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
 `;
 
 const ToShop = styled.button.attrs((props) => ({
@@ -59,6 +64,16 @@ const ShopWrap = styled.div`
   }
 `;
 
+const ItemBox = styled.div`
+  width: 250px;
+  @media screen and (max-width: 1400px) {
+    width: 350px;
+  }
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
 //프로덕트 이미지
 const ProductImage = styled.img`
   max-width: 100%; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
@@ -89,6 +104,7 @@ const Price = styled.div`
   font-weight: bold;
   margin-block: 1rem;
 `;
+
 //할인율
 const PriceRate = styled.div`
   font-size: 18px;
@@ -131,7 +147,8 @@ export default function Products() {
           </ProductTitle>
           <ShopWrap>
             {products?.slice(0, 4).map((product) => (
-              <div key={product.id}>
+
+              <ItemBox key={product.id}>
                 <div>
                   <ProductImage src={product.image} alt={product.name} />
                 </div>
@@ -141,7 +158,9 @@ export default function Products() {
                   <PriceRate>{product.discountRate}</PriceRate>
                 </PriceWrap>
                 <RegularPrice>{product.RatePrice}</RegularPrice>
-              </div>
+
+              </ItemBox>
+
             ))}
           </ShopWrap>
         </ProductContainer>

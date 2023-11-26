@@ -85,8 +85,9 @@ const RecommendContentBox = styled.div`
 
 const RecommendPostContent = styled.p`
   width: 80%;
-  height: 17px;
+  height: 1.25rem;
   word-wrap: break-word;
+  font-size: 1.25rem;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -124,7 +125,7 @@ const MoreButton = styled.button.attrs((props) => ({
 export default function RecommendGrid({ filteredData }) {
   return (
     <>
-      {filteredData?.map((post) => {
+      {filteredData?.slice(0, 2)?.map((post) => {
         return (
           <RecommendPostBox key={post.createdAt.nanoseconds}>
             <RecommendTitle>{post.title}</RecommendTitle>

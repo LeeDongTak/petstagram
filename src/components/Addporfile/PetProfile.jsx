@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { addPetModal } from '../../redux/modules/addPetProfile';
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs, query } from 'firebase/firestore';
@@ -35,7 +33,7 @@ function PetProfile() {
   };
 
   useEffect(() => {
-      fetchData();
+    fetchData();
   }, []);
   console.log(addPetProfile.petData);
 
@@ -46,9 +44,7 @@ function PetProfile() {
         <StAddPetBtn onClick={addPetModalHandler}>반려동물 등록</StAddPetBtn>
       </StPetPorfileWrap>
       <StPetCardWarp>
-
         {addPetProfile?.petData?.map((item, index) => {
-
           return <PetCard petData={item} index={index} key={item.petId} />;
         })}
       </StPetCardWarp>
