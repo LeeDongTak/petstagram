@@ -80,7 +80,7 @@ const PostCard = styled.div`
   }
 `;
 
-const PostImg = styled.div`
+const PostImg = styled.img`
   width: 100%;
   display: block;
   border-top-left-radius: 5px;
@@ -177,6 +177,8 @@ export default function Feeds() {
 
   console.log(feeds);
 
+  const pattern = /https?:\/\/firebasestorage\.googleapis\.com[^\s"]+/;
+
   return (
     <FeedContainer>
       <FeedButtonBox>
@@ -191,8 +193,8 @@ export default function Feeds() {
           return (
             <PostCard key={i} id={post.cid} onClick={(e) => goDetail(e)}>
               <div id={post.cid} onClick={(e) => goDetail(e)}>
-                {post.img === null ? null : (
-                  <PostImg id={post.cid} onClick={(e) => goDetail(e)} $img={'https://placehold.co/400'}></PostImg>
+                {post?.content.match(pattern) === null ? null : (
+                  <PostImg id={post.cid} onClick={(e) => goDetail(e)} src={post?.content.match(pattern)}></PostImg>
                 )}
                 <PostContentSection id={post.cid} onClick={(e) => goDetail(e)}>
                   <PostTitle>{post.title}</PostTitle>

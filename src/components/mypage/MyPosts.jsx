@@ -6,6 +6,7 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
 import PostImages from './PostImages';
 import parse from 'html-react-parser';
+import HTMLReactParser from 'html-react-parser';
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
@@ -100,7 +101,7 @@ function MyPosts({ title, content, postId, setPost }) {
     });
   };
 
-  console.log(parse(content));
+  console.log(parse(content).props?.children);
 
   return (
     <MyPostsContainer>
@@ -130,6 +131,7 @@ function MyPosts({ title, content, postId, setPost }) {
                 id=""
                 cols="30"
                 rows="10"
+                placeholder={parse(content).props?.children}
                 defaultValue={parse(content)}
                 onChange={onChangeEditContent}
               ></textarea>

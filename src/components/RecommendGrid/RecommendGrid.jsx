@@ -87,8 +87,9 @@ const RecommendContentBox = styled.div`
 
 const RecommendPostContent = styled.div`
   width: 80%;
-  height: 1.5rem;
+  height: 2.21rem;
   word-wrap: break-word;
+  line-height: 1.5;
   font-size: 1.25rem;
   text-overflow: ellipsis;
   overflow: hidden;

@@ -35,7 +35,6 @@ function MainDetail() {
   };
 
   const pattern = /https?:\/\/firebasestorage\.googleapis\.com[^\s"]+/;
-  const result = posts[0]?.content.match(pattern);
 
   console.log(posts);
 

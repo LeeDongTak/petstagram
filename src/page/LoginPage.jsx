@@ -186,7 +186,7 @@ function LoginPage() {
   //   }
   // };
 
-  //비활성화 버튼 -> 유효성검사에 따라 활성화
+  // 비활성화 버튼 -> 유효성검사에 따라 활성화
   useEffect(() => {
     if (emailValid && passwordValid) {
       setNotAllow(false);
