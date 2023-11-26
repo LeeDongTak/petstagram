@@ -95,6 +95,13 @@ const ButtonContainer = styled.div`
   gap: 1.25rem;
 `;
 
+const WriteButton = styled.h2`
+  width: fit-content;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 1.3rem;
+`;
+
 const Button = styled.button.attrs((props) => ({
   type: 'button'
 }))`
@@ -199,7 +206,7 @@ export default function Header() {
       setHasToken(true);
     }
   }, [reduxUser]);
-  
+
   // FUNCTIONS
   const handleToggle = () => {
     setMenuToggle((prev) => !prev);
@@ -211,6 +218,11 @@ export default function Header() {
     e.target.innerText === 'Register' && navi('/signup');
 
     setMenuToggle(false);
+  };
+
+  // 글 작성 페이지로
+  const goWrite = () => {
+    navi('/write');
   };
 
   // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
@@ -265,6 +277,7 @@ export default function Header() {
           {hasToken === true
             ? loginedButton.map((text, i) => (
                 <UserContainer key={i}>
+                  <WriteButton onClick={() => goWrite()}>글쓰기</WriteButton>
                   <Button onClick={() => logOut()} key={text} $bgColor={text}>
                     {text}
                   </Button>

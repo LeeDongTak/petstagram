@@ -1,29 +1,52 @@
-import React from 'react';
+import { collection, getDocs, query } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { db } from '../../fireBase';
+import { useParams } from 'react-router-dom';
 
 function OwnerProfile() {
+  const { id } = useParams();
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const q = query(collection(db, 'users'));
+        const querySnapshot = await getDocs(q);
+
+        const userInfo = [];
+        querySnapshot.forEach((user) => {
+          const data = { id: user.id, ...user.data() };
+          userInfo.push(data);
+        });
+        setUser(userInfo?.filter((el) => el.id === id));
+        console.log(userInfo); // [{}, {}, {}, {}]
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  console.log(user[0]);
+
   return (
     <ProfileContainer>
       <OwnerProfileContainer>
-        <img
-          src="https://images.unsplash.com/photo-1557053908-4793c484d06f?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-        />
+        <img width="100%" src={user[0]?.profileimgURL} alt="" />
 
         <OwnerInfo>
-          <h3>유저이름</h3>
-          <p>
-            강아지 2마리와 고양이 1마리와 살아요.강아지 2마리와 고양이 1마리와 살아요.강아지 2마리와 고양이 1마리와
-            살아요.
-          </p>
+          <h3>{user[0]?.profilename}</h3>
+          <p>{user[0]?.profileIntroduction}</p>
         </OwnerInfo>
       </OwnerProfileContainer>
 
       <InterestedInWrapper>
         <h3>관심사</h3>
         <InterestedIn>
-          <span>#간식</span>
-          <span>#산책</span>
+          {user[0]?.profileInterests.map((el) => {
+            return <span>#{el}</span>;
+          })}
         </InterestedIn>
       </InterestedInWrapper>
     </ProfileContainer>

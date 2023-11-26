@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RecommendGrid from '../RecommendGrid/RecommendGrid';
+import { db, fetchData } from '../../fireBase';
+import { collection, getDocs } from 'firebase/firestore';
+import { addPost } from '../../redux/modules/posts';
 
 // STYLED-COMPONENTS
 const RecommendSection = styled.div`
@@ -27,12 +30,10 @@ const RcommendSectionTitle = styled.h1`
   width: fit-content;
   height: 100%;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 2.25rem;
   margin-block: 1rem;
-  padding: 1rem;
   color: var(--primary-color);
   border-radius: 5px;
-  background: #eeeeee;
 
   @media screen and (max-width: 960px) {
     margin: 2rem auto;
@@ -44,13 +45,23 @@ const RcommendSectionTitle = styled.h1`
 export default function Recommend() {
   // Redux State
   const reduxData = useSelector((state) => state.posts);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const snapshot = await getDocs(collection(db, 'posts'));
+      const posts = [];
+      snapshot.forEach((doc) => {
+        posts.push({ id: doc.id, ...doc.data() });
+      });
+      return dispatch(addPost(posts));
+    };
+    fetchData();
+  }, []);
 
   // Variables
   // - RecommendGrid 컴포넌트로 전달해줍니다.
   // - 데이터의 categoryCode 값에 따라 filter가 됩니다.
-  // - (예. 산책 관련, 애견동반 관련)
-  const filteredByWalk = reduxData[0]?.filter((post) => post.categoryCode === '0001');
-  const filteredByPlace = reduxData[0]?.filter((post) => post.categoryCode === '0002');
 
   // UI 생성 시 필요한 데이터를 추가하기 위함 (사용 안 함)
   // useEffect(() => {
@@ -65,13 +76,9 @@ export default function Recommend() {
 
   return (
     <RecommendSection>
-      <RcommendSectionTitle>산책 추천 SPOT!</RcommendSectionTitle>
-      <RecommendContainer $section={'산책'}>
-        <RecommendGrid filteredData={filteredByWalk} />
-      </RecommendContainer>
-      <RcommendSectionTitle>애견 동반 SPOT!</RcommendSectionTitle>
+      <RcommendSectionTitle>NewsFeed</RcommendSectionTitle>
       <RecommendContainer>
-        <RecommendGrid filteredData={filteredByPlace} />
+        <RecommendGrid data={reduxData} />
       </RecommendContainer>
     </RecommendSection>
   );

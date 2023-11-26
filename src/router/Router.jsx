@@ -11,6 +11,8 @@ import AddProfile from '../page/AddProfile';
 import WritePage from '../page/WritePage';
 import Feeds from '../page/Feeds';
 import GlobalStyle from '../styled/GlobalStyle';
+import EditProfile from '../components/EditProfile/EditProfile';
+import Post from '../page/Post';
 
 function Router() {
   return (
@@ -27,6 +29,8 @@ function Router() {
         <Route path="/write" element={<WritePage />} />
         {/* <Route path="/shop/:productid" element={<Shop />} /> */}
         <Route path="/posts" element={<Feeds />} />
+        <Route path="/edit-profile/:id" element={<EditProfile />} />
+        <Route path="/post/:id" element={<Post />} />
       </Routes>
       <Footer />
     </BrowserRouter>
