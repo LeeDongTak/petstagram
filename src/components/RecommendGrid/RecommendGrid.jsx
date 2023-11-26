@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
+import { useNavigate } from 'react-router-dom';
 
 // STYLED-COMPONENTS
 const RecommendPostBox = styled.div`
@@ -124,12 +125,17 @@ const MoreButton = styled.button.attrs((props) => ({
 
 // MAIN COMPONENTS
 export default function RecommendGrid({ data }) {
-  console.log(data);
+  const navi = useNavigate();
+
+  const goRecommend = () => {
+    navi('/maindetail');
+  };
+
   return (
     <>
       {data[0]?.slice(0, 4).map((post) => {
         return (
-          <RecommendPostBox key={post.id}>
+          <RecommendPostBox onClick={() => goRecommend()} key={post.id}>
             <RecommendTitle>{post.title}</RecommendTitle>
             <RecommendUserInfo>
               <RecommendUserImg />

@@ -76,7 +76,7 @@ export default function Recommend() {
 
   return (
     <RecommendSection>
-      <RcommendSectionTitle>NewsFeed</RcommendSectionTitle>
+      <RcommendSectionTitle>Recommend SPOT</RcommendSectionTitle>
       <RecommendContainer>
         <RecommendGrid data={reduxData} />
       </RecommendContainer>

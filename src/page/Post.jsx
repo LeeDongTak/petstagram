@@ -10,6 +10,9 @@ const ContentContainer = styled.div`
   display: flex;
   justify-content: center;
   padding: 3rem 30rem;
+  @media screen and (max-width: 960px) {
+    padding: 3rem 3rem;
+  }
 `;
 
 const ContentBox = styled.div`

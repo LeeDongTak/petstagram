@@ -65,6 +65,7 @@ const ShopWrap = styled.div`
 `;
 
 const ItemBox = styled.div`
+  cursor: pointer;
   width: 250px;
   @media screen and (max-width: 1400px) {
     width: 350px;
@@ -137,6 +138,12 @@ export default function Products() {
     navi('/shop');
     window.scrollTo({ top: true });
   };
+
+  const goDetail = (e) => {
+    e.stopPropagation();
+    navi(`shop/${e.target.id}`);
+  };
+
   return (
     <>
       <ProductSection>
@@ -147,20 +154,19 @@ export default function Products() {
           </ProductTitle>
           <ShopWrap>
             {products?.slice(0, 4).map((product) => (
-
-              <ItemBox key={product.id}>
-                <div>
-                  <ProductImage src={product.image} alt={product.name} />
+              <ItemBox key={product.id} id={product.id} onClick={goDetail}>
+                <div id={product.id} onClick={goDetail}>
+                  <ProductImage id={product.id} onClick={goDetail} src={product.image} alt={product.name} />
                 </div>
-                <ProductT>{product.name}</ProductT>
-                <PriceWrap>
+                <ProductT id={product.id} onClick={goDetail}>
+                  {product.name}
+                </ProductT>
+                <PriceWrap id={product.id} onClick={goDetail}>
                   <Price>{product.price}</Price>
                   <PriceRate>{product.discountRate}</PriceRate>
                 </PriceWrap>
                 <RegularPrice>{product.RatePrice}</RegularPrice>
-
               </ItemBox>
-
             ))}
           </ShopWrap>
         </ProductContainer>

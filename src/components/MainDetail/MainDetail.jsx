@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../fireBase';
 import styled from 'styled-components';
+import parse from 'html-react-parser';
+import { useNavigate } from 'react-router-dom';
 
 function MainDetail() {
   const [posts, setPosts] = useState([]);
+  const navi = useNavigate();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -26,19 +29,41 @@ function MainDetail() {
     fetchPosts();
   }, []);
 
+  const goDetail = (e) => {
+    e.stopPropagation();
+    navi(`/post/${e.target.id}`);
+  };
+
+  const pattern = /https?:\/\/firebasestorage\.googleapis\.com[^\s"]+/;
+  const result = posts[0]?.content.match(pattern);
+
+  console.log(posts);
+
   return (
     <>
       <MyPostsContainer>
         <MainTitle>SPOT RECOMMEND</MainTitle>
-        {posts.map((post) => (
-          <MyPostCard key={post.id}>
-            <PostImageContainer>
-              <img src={post.image} alt="Image" />
+        {posts?.map((post) => (
+          <MyPostCard key={post.id} id={post.cid} onClick={goDetail}>
+            <PostImageContainer id={post.cid} onClick={goDetail}>
+              {post.content.match(pattern) === null ? (
+                <h1 id={post.cid} onClick={goDetail}>
+                  이미지가 없습니다
+                </h1>
+              ) : (
+                <img id={post.cid} onClick={goDetail} src={post?.content.match(pattern)} alt="Image" />
+              )}
             </PostImageContainer>
-            <PostInfo>
-              <p>{post.user}</p>
-              <Title>{post.title}</Title>
-              <p>{post.contents}</p>
+            <PostInfo id={post.cid} onClick={goDetail}>
+              <p id={post.cid} onClick={goDetail}>
+                {post.user}
+              </p>
+              <Title id={post.cid} onClick={goDetail}>
+                {post.title}
+              </Title>
+              <p id={post.cid} onClick={goDetail}>
+                {parse(post.content)}
+              </p>
             </PostInfo>
           </MyPostCard>
         ))}
@@ -70,6 +95,11 @@ const MyPostCard = styled.div`
   gap: 20px;
   padding: 20px 0;
   border-bottom: 1px solid #c7c7c7a2;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eee;
+  }
 
   @media screen and (max-width: 900px) {
     flex-direction: column;
@@ -80,7 +110,7 @@ const PostImageContainer = styled.div`
   flex: 1;
 
   & img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
     object-fit: cover;
   }
@@ -96,6 +126,8 @@ const PostImageContainer = styled.div`
 const PostInfo = styled.div`
   flex: 2;
   line-height: 1.5;
+  height: 200px;
+  overflow: hidden;
 `;
 
 const Title = styled.div`

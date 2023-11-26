@@ -5,6 +5,7 @@ import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
 import PostImages from './PostImages';
+import parse from 'html-react-parser';
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
@@ -99,6 +100,8 @@ function MyPosts({ title, content, postId, setPost }) {
     });
   };
 
+  console.log(parse(content));
+
   return (
     <MyPostsContainer>
       {!isEditing ? (
@@ -106,7 +109,7 @@ function MyPosts({ title, content, postId, setPost }) {
           <PostContainer>
             <PostInfo>
               <h3>{title}</h3>
-              <p>{content}</p>
+              <p>{parse(content)}</p>
               <PostImageContainer>
                 <PostImages imageList={imageList} deleteImage={deleteImage} isEditing={isEditing}></PostImages>
               </PostImageContainer>
@@ -127,7 +130,7 @@ function MyPosts({ title, content, postId, setPost }) {
                 id=""
                 cols="30"
                 rows="10"
-                defaultValue={content}
+                defaultValue={parse(content)}
                 onChange={onChangeEditContent}
               ></textarea>
               <InputAndButtonWrapper>
