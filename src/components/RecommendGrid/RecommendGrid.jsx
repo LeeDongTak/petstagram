@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import parse from 'html-react-parser';
 
 // STYLED-COMPONENTS
 const RecommendPostBox = styled.div`
@@ -83,9 +84,9 @@ const RecommendContentBox = styled.div`
   padding: 1rem;
 `;
 
-const RecommendPostContent = styled.p`
+const RecommendPostContent = styled.div`
   width: 80%;
-  height: 1.25rem;
+  height: 1.5rem;
   word-wrap: break-word;
   font-size: 1.25rem;
   text-overflow: ellipsis;
@@ -122,19 +123,20 @@ const MoreButton = styled.button.attrs((props) => ({
 `;
 
 // MAIN COMPONENTS
-export default function RecommendGrid({ filteredData }) {
+export default function RecommendGrid({ data }) {
+  console.log(data);
   return (
     <>
-      {filteredData?.slice(0, 2)?.map((post) => {
+      {data[0]?.slice(0, 4).map((post) => {
         return (
-          <RecommendPostBox key={post.createdAt.nanoseconds}>
+          <RecommendPostBox key={post.id}>
             <RecommendTitle>{post.title}</RecommendTitle>
             <RecommendUserInfo>
               <RecommendUserImg />
               <RecommendUserName>{post.username}</RecommendUserName>
             </RecommendUserInfo>
             <RecommendContentBox>
-              <RecommendPostContent>{post.content}</RecommendPostContent>
+              <RecommendPostContent>{parse(post.content)}</RecommendPostContent>
             </RecommendContentBox>
 
             <MoreButton>더 보기</MoreButton>

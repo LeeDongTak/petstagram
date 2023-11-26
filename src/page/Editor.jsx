@@ -10,6 +10,7 @@ import '@toast-ui/editor/dist/i18n/ko-kr';
 import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetEditor, setContent, setTitle } from '../redux/modules/editor';
+import { useNavigate } from 'react-router-dom';
 
 const EditWrapper = styled.div`
   width: 100%;
@@ -80,6 +81,8 @@ export function EditorBox() {
   const editorState = useSelector((state) => state.editorReducer);
   const editorRef = useRef();
 
+  const navi = useNavigate();
+
   // FUNCTIONS
   const onChange = () => {
     const data = editorRef.current.getInstance().getHTML();
@@ -94,16 +97,20 @@ export function EditorBox() {
     return false;
   };
 
+  // 현재 로그인 사용자의 uid
+  const uid = JSON.parse(localStorage.getItem('user')).uid;
+
   const onSaveData = async () => {
-    await saveData(editorState.editId, editorState.editTitle, editorState.editorData);
+    await saveData(uid, editorState.editTitle, editorState.editorData);
     dispatch(resetEditor());
-    fetchSinglePost();
     console.log('완료');
     // navigate(`/post/${editorState.editId}`);
     // const data = editorRef.current.getInstance().getHTML();
 
     // // 서버로 데이터 전송
     // await saveData(editTitle, data);
+    alert('게시물 등록이 완료되었습니다');
+    navi('/');
   };
 
   return (

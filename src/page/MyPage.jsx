@@ -6,7 +6,7 @@ import MyPosts from '../components/mypage/MyPosts';
 import { useEffect } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../fireBase';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import authStorage from '../util/authUser';
 
@@ -16,6 +16,8 @@ function MyPage() {
 
   // URL 파라미터
   const { id } = useParams();
+
+  const navi = useNavigate();
 
   // STATES
   const [post, setPost] = useState([]);
@@ -40,7 +42,7 @@ function MyPage() {
           const data = { id: post.id, ...post.data() };
           initialPosts.push(data);
         });
-        setPost(initialPosts.filter((el) => el.id === id));
+        setPost(initialPosts?.filter((el) => el.uid === id));
         console.log(initialPosts); // [{}, {}, {}, {}]
       } catch (err) {
         console.log(err);

@@ -13,6 +13,8 @@ import Feeds from '../page/Feeds';
 import GlobalStyle from '../styled/GlobalStyle';
 import MainDetail from '../components/MainDetail/MainDetail';
 import ProductDetail from '../components/ProductDetail/ProductDetail';
+import EditProfile from '../components/EditProfile/EditProfile';
+import Post from '../page/Post';
 
 function Router() {
   return (
@@ -30,6 +32,8 @@ function Router() {
         <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/posts" element={<Feeds />} />
         <Route path="/maindetail" element={<MainDetail />} />
+        <Route path="/edit-profile/:id" element={<EditProfile />} />
+        <Route path="/post/:id" element={<Post />} />
       </Routes>
       <Footer />
     </BrowserRouter>

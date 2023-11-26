@@ -17,7 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 function MasterPorfile() {
   const { id } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const addprofile = useSelector((state) => state.addprofile);
   const dispatch = useDispatch();
   const AddfileRef = useRef(null);
@@ -49,8 +49,8 @@ function MasterPorfile() {
     dispatch(profileInterestsRemove(index));
   };
   const profileAddHandler = (id, e, navigate) => {
-    dispatch(profileAddCommit({id, e,navigate}))
-  }
+    dispatch(profileAddCommit({ id, e, navigate }));
+  };
   return (
     <StMasterPorfileWrap>
       <StPorfileImgBox>
@@ -72,7 +72,7 @@ function MasterPorfile() {
               value={addprofile.profilename}
               onChange={profilenameHandler}
               onKeyUp={(e) => {
-                if (e.key === 'Enter') profileAddHandler(id,e,navigate);
+                if (e.key === 'Enter') profileAddHandler(id, e, navigate);
               }}
             />
           </StinputBox>
@@ -87,7 +87,7 @@ function MasterPorfile() {
               value={addprofile.profileIntroduction}
               onChange={profileIntroductionHandler}
               onKeyUp={(e) => {
-                if (e.key === 'Enter') profileAddHandler(id,e,navigate);
+                if (e.key === 'Enter') profileAddHandler(id, e, navigate);
               }}
             />
           </StinputBox>

@@ -1,18 +1,20 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { getAuth } from 'firebase/auth';
-import { config } from './config';
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { config } from "./config";
+import { v4 as uuid } from 'uuid'
 
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
-export const saveData = async (id, title, content) => {
+export const saveData = async (uid, title, content) => {
   try {
-    const docRef = await addDoc(collection(db, 'posts'), {
-      id,
+    const docRef = await addDoc(collection(db, "posts"), {
+      uid: uid,
       title,
-      content
+      content,
+      cid: uuid()
     });
     console.log('제목,내용 저장', docRef.id);
   } catch (e) {
@@ -54,22 +56,6 @@ const readFileAsDataURL = (file) => {
   });
 };
 
-export const fetchSinglePost = async (postId) => {
-  try {
-    const docRef = doc(db, 'posts', postId);
-    const docSnap = await getDocs(docRef);
-
-    if (docSnap.exists()) {
-      return docSnap.data();
-    } else {
-      console.log('No such document!');
-      return null;
-    }
-  } catch (error) {
-    console.error('에러실패', error);
-    return null;
-  }
-};
 
 const firebaseConfig = config.db.dbConfig;
 

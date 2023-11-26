@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { FadeAni } from './MyPage';
-import { fetchData } from '../fireBase';
+import { db, fetchData } from '../fireBase';
 import { addPost } from '../redux/modules/posts';
 import parse from 'html-react-parser';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 // 이미지를 따로 가져올 수 있는가
 
@@ -57,18 +59,25 @@ const GridSection = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
   @media screen and (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 
 const PostCard = styled.div`
-  width: 100%;
+  max-width: 400px;
+  min-width: 250px;
   height: 400px;
   border-radius: 5px;
   background-color: #eee;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media screen and (max-width: 1400px) {
+    max-width: 300px;
+  }
+  @media screen and (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 const PostImg = styled.div`
@@ -133,17 +142,40 @@ export default function Feeds() {
   const buttons = ['트렌드', '최신'];
   const [currentTarget, setCurrentTarget] = useState('트렌드');
 
-  const reduxData = useSelector((state) => state.posts);
-  const dispatch = useDispatch();
+  const navi = useNavigate();
+
+  const [feeds, setFeeds] = useState();
 
   useEffect(() => {
-    fetchData().then((data) => dispatch(addPost(data)));
+    const fetchData = async () => {
+      try {
+        const q = query(collection(db, 'posts'));
+        const querySnapshot = await getDocs(q);
+
+        const initialPosts = [];
+        querySnapshot.forEach((post) => {
+          const data = { id: post.id, ...post.data() };
+          initialPosts.push(data);
+        });
+        setFeeds(initialPosts);
+        console.log(initialPosts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleCurrent = (e) => {
     setCurrentTarget(e.target.innerText);
   };
-  console.log(reduxData);
+
+  const goDetail = (e) => {
+    e.stopPropagation();
+    navi(`/post/${e.target.id}`);
+  };
+
+  console.log(feeds);
 
   return (
     <FeedContainer>
@@ -155,12 +187,14 @@ export default function Feeds() {
         ))}
       </FeedButtonBox>
       <GridSection>
-        {reduxData[0]?.map((post, i) => {
+        {feeds?.map((post, i) => {
           return (
-            <PostCard key={i}>
-              <div>
-                {post.img === null ? null : <PostImg $img={'https://placehold.co/400'}></PostImg>}
-                <PostContentSection>
+            <PostCard key={i} id={post.cid} onClick={(e) => goDetail(e)}>
+              <div id={post.cid} onClick={(e) => goDetail(e)}>
+                {post.img === null ? null : (
+                  <PostImg id={post.cid} onClick={(e) => goDetail(e)} $img={'https://placehold.co/400'}></PostImg>
+                )}
+                <PostContentSection id={post.cid} onClick={(e) => goDetail(e)}>
                   <PostTitle>{post.title}</PostTitle>
                   <PostContent>{parse(post.content)}</PostContent>
                 </PostContentSection>

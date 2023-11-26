@@ -1,4 +1,4 @@
-import { addDoc, collection, setDoc, doc } from 'firebase/firestore';
+import { addDoc, collection, setDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
@@ -12,6 +12,7 @@ const PROFILE_INTERESTS_TEXT_CHAGE = 'PROFILE_INTERESTS_TEXT_CHAGE';
 const PROFILE_INTERESTS_INSERT = 'PROFILE_INTERESTS_INSERT';
 const PROFILE_INTERESTS_REMOVE = 'PROFILE_INTERESTS_REMOVE';
 const PROFILE_ADD_COMMIT = 'PROFILE_ADD_COMMIT';
+const PROFILE_EDIT_COMMIT = 'PROFILE_EDIT_COMMIT'
 
 // 프로필 이미지 URL 바꾸는 action
 export const profileImgURLChage = (payload) => {
@@ -20,6 +21,7 @@ export const profileImgURLChage = (payload) => {
     payload
   };
 };
+
 // 프로필 이미지 파일을 담는 action
 export const profileImgChage = (payload) => {
   return {
@@ -27,6 +29,7 @@ export const profileImgChage = (payload) => {
     payload
   };
 };
+
 // 프로필 이름을 저장하는 action
 export const profilenameChage = (payload) => {
   return {
@@ -34,6 +37,7 @@ export const profilenameChage = (payload) => {
     payload
   };
 };
+
 // 프로필 한줄소개를 저장하는 action
 export const profileIntroductionChage = (payload) => {
   return {
@@ -41,6 +45,7 @@ export const profileIntroductionChage = (payload) => {
     payload
   };
 };
+
 // 프로필 관심사텍스트를 저장하는 action
 export const profileInterestsTextChage = (payload) => {
   return {
@@ -48,6 +53,7 @@ export const profileInterestsTextChage = (payload) => {
     payload
   };
 };
+
 // 프로필 관심사 텍스트에 저장된 텍스트를 배열로 저장하는 action
 export const profileInterestsInsert = (payload) => {
   return {
@@ -55,6 +61,7 @@ export const profileInterestsInsert = (payload) => {
     payload
   };
 };
+
 // 프로필 관심사를 삭제하는 action
 export const profileInterestsRemove = (payload) => {
   return {
@@ -62,9 +69,17 @@ export const profileInterestsRemove = (payload) => {
     payload
   };
 };
+
 export const profileAddCommit = (payload) => {
   return {
     type: PROFILE_ADD_COMMIT,
+    payload
+  };
+};
+
+export const profileEditCommit = (payload) => {
+  return {
+    type: PROFILE_EDIT_COMMIT,
     payload
   };
 };
@@ -230,6 +245,102 @@ const addprofile = (state = initialState, action) => {
               }
             };
             addProfile();
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        handleUpload();
+        return {
+          ...state,
+          profileimgURL: 'https://picpac.kr/common/img/default_profile.png', // 프로필이미지 URL
+          profileimg: '', // 프로필 이미지 파일
+          profilename: '', // 프로필 이름
+          profileIntroduction: '', // 프로필 한줄소개
+          profileInterestsText: '', // 프로필 관심사 택스트 저장
+          profileInterests: [], // 프로필 관심사 배열로 저장
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileNameMsg: '', // 프로필 이름 에러 메시지
+          profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
+          profileimgMsg: '' // 프로필 관심사 이미지 메시지
+        };
+      }
+    case PROFILE_EDIT_COMMIT:
+      if (state.profileimg.length === 0) {
+        return {
+          ...state,
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileNameMsg: '', // 프로필 이름 에러 메시지
+          profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
+          profileimgMsg: '이미지를 등록해 주세요.'
+        };
+      } else if (state.profilename === '') {
+        return {
+          ...state,
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          profileNameMsg: '이름이 입력되지 않았습니다.'
+        };
+      } else if (state.profilename.length > 10) {
+        return {
+          ...state,
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          profileNameMsg: '이름은 10글자 이내로 작성해 주세요.'
+        };
+      } else if (state.profileIntroduction === '') {
+        return {
+          ...state,
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileNameMsg: '', // 프로필 이름 에러 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          profileIntroductionMsg: '한줄소개가 입력되지 않았습니다.'
+        };
+      } else if (state.profileIntroduction.length > 15) {
+        return {
+          ...state,
+          profileInterestsMsg: '', // 프로필 관심사 에러 메시지
+          profileNameMsg: '', // 프로필 이름 에러 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          profileIntroductionMsg: '한줄소개는 15글자 이내로 작성해 주세요.'
+        };
+      } else if (state.profileInterests.length === 0) {
+        return {
+          ...state,
+          profileNameMsg: '', // 프로필 이름 에러 메시지
+          profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          profileInterestsMsg: '관심사를 입력해 주세요'
+        };
+      } else {
+        const handleUpload = async () => {
+          try {
+            // 스토리지에 이미지 저장
+            const imageRef = ref(
+              storage,
+              `${action.payload.id}/${moment().format('YYYYMMDDHHMMSS')}/${state.profileimg.name}`
+            );
+            await uploadBytes(imageRef, state.profileimg);
+            const downloadURL = await getDownloadURL(imageRef);
+
+            // 스토리지에 이미지 저장 후 firestore에 데이터 저장(이미지 url을 저장하기 위해서 )
+            const editProfile = async () => {
+              try {
+                action.payload.e.preventDefault();
+                const editProfile = {
+                  profileimgURL: downloadURL, // 프로필 이미지 파일
+                  profilename: state.profilename, // 프로필 이름
+                  profileIntroduction: state.profileIntroduction, // 프로필 한줄소개
+                  profileInterests: state.profileInterests // 프로필 관심사 배열로 저장
+                };
+                await updateDoc(doc(db, 'users', `${action.payload.id}`), editProfile);
+                action.payload.navigate('/');
+              } catch (error) {
+                console.error(error);
+              }
+            };
+            editProfile();
           } catch (error) {
             console.error(error);
           }

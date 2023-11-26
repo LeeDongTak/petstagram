@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { v4 } from 'uuid';
 import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
-import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
 import PostImages from './PostImages';
 
 function MyPosts({ title, content, postId, setPost }) {
