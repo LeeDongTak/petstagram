@@ -5,7 +5,6 @@ import { getAuth } from "firebase/auth";
 import { config } from "./config";
 import { v4 as uuid } from 'uuid'
 
-
 // Your we b app's Firebase configuration
 // Initialize Firebase
 
@@ -18,23 +17,21 @@ export const saveData = async (uid, title, content) => {
       cid: uuid()
     });
     console.log('제목,내용 저장', docRef.id);
-
   } catch (e) {
-    console.log('실패')
+    console.log('실패');
     console.log(e.code);
     return null;
   }
 };
 
 export const fetchData = async () => {
-  const snapshot = await getDocs(collection(db, "posts"));
+  const snapshot = await getDocs(collection(db, 'posts'));
   const posts = [];
   snapshot.forEach((doc) => {
     posts.push({ id: doc.id, ...doc.data() });
   });
   return posts;
 };
-
 
 export const uploadImage = async (file) => {
   try {
@@ -60,12 +57,10 @@ const readFileAsDataURL = (file) => {
 };
 
 
-
 const firebaseConfig = config.db.dbConfig;
 
 export const app = initializeApp(firebaseConfig);
 // Your web app's Firebase configuration
-
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

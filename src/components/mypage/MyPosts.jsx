@@ -39,7 +39,6 @@ function MyPosts({ title, content, postId, setPost }) {
   const editPostHandler = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'posts', postId);
-
     // 새로운 제목 또는 내용만 업데이트
     const updatedData = {};
     if (editingTitle) {
