@@ -5,6 +5,7 @@ import addprofile from "../modules/addProfile";
 import addPetProfile from "../modules/addPetProfile";
 import { posts } from "../modules/posts";
 import { users } from "../modules/users";
+import { follow } from "../modules/follow";
 import editorReducer from "../modules/editor";
 
 
@@ -14,6 +15,7 @@ const rootreducer = combineReducers({
   addPetProfile,
   posts,
   users,
+  follow,
   editorReducer
 })
 

@@ -10,6 +10,7 @@ import Signup from '../page/Signup';
 import AddProfile from '../page/AddProfile';
 import WritePage from '../page/WritePage';
 import Feeds from '../page/Feeds';
+import Follow from '../page/Follow';
 import GlobalStyle from '../styled/GlobalStyle';
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
         <Route path="/write" element={<WritePage />} />
         {/* <Route path="/shop/:productid" element={<Shop />} /> */}
         <Route path="/posts" element={<Feeds />} />
+        <Route path="/follow" element={<Follow />} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -6,7 +6,6 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import PostImages from './PostImages';
 
-
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
   const [imageUpload, setImageUpload] = useState(null); // 업로드할 이미지
@@ -18,24 +17,16 @@ function MyPosts({ title, content, postId, setPost }) {
   const showEditPostHandler = () => {
     setIsEditig(true);
   };
-
   const cancelEditPostHandler = () => {
     setIsEditig(false);
   };
-
   const onChangeEditTitle = (e) => {
     setEditingTitle(e.target.value);
   };
-
   const onChangeEditContent = (e) => {
     setEditingContent(e.target.value);
   };
-
   // 게시물 삭제 핸들러
-
-  // FUNCTIONS
-  // 게시물 삭제
-
   const deletePostHandler = async () => {
     const docRef = doc(db, 'posts', postId);
     await deleteDoc(docRef);
@@ -45,18 +36,9 @@ function MyPosts({ title, content, postId, setPost }) {
   };
 
   // 게시물 수정 핸들러
-  const onChangeEditTitle = (e) => {
-    setEditingTitle(e.target.value);
-  };
-
-  const onChangeEditContent = (e) => {
-    setEditingContent(e.target.value);
-  };
-
   const editPostHandler = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'posts', postId);
-
     // 새로운 제목 또는 내용만 업데이트
     const updatedData = {};
     if (editingTitle) {
@@ -65,7 +47,6 @@ function MyPosts({ title, content, postId, setPost }) {
     if (editingContent) {
       updatedData.content = editingContent;
     }
-
     try {
       await updateDoc(docRef, updatedData);
       setPost((prev) => prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p)));
@@ -76,63 +57,19 @@ function MyPosts({ title, content, postId, setPost }) {
   };
 
   const imageFolderRef = ref(storage, postId);
-
   useEffect(() => {
     listAll(imageFolderRef).then((res) => {
       res.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-    // Firestore에서 업데이트
-    await updateDoc(docRef, updatedData);
-
-    setPost((prev) => {
-      return prev.map((p) => {
-        if (p.id === postId) {
-          return { ...p, updatedData }; // 기존 포스트와 업데이트된 데이터 병합
-        } else {
-          return p;
-        }
-      });
-    });
-
-    // 이미지 업로드
-    uploadImage();
-    setIsEditig(false);
-  };
-
-  // 이미지 업로드 함수
-  const uploadImage = () => {
-    if (imageUpload === null) return;
-    const imageRef = ref(storage, `${postId}/${v4()}`);
-    uploadBytes(imageRef, imageUpload).then(() => {
-      alert('이미지가 성공적으로 업로드 되었습니다.');
-    });
-  };
-
-  const showEditPostHandler = () => {
-    setIsEditig(true);
-  };
-
-  const cancelEditPostHandler = () => {
-    setIsEditig(false);
-  };
-
-  const IMAGE_FOLDER = ref(storage, `${postId}`);
-
-  useEffect(() => {
-    listAll(IMAGE_FOLDER).then((res) => {
-      res.items.forEach((image) => {
-        getDownloadURL(image).then((url) => {
           setImageList((prev) => [...prev, url]);
         });
       });
     });
   }, []);
 
-
   // 게시물 수정할 때 이미지 업로드 핸들러
   const uploadImage = () => {
     if (imageUpload === null) return; // 업로드할 이미지 없을 시 아무것도 반환하지 않음
-
     // storage 레퍼런스 (업로드 장소(폴더))
     const imageRef = ref(storage, `${postId}/${imageUpload.name + v4()}`);
     // 폴더에 파일 인풋에 업로드한 이미지파일 저장
@@ -143,7 +80,6 @@ function MyPosts({ title, content, postId, setPost }) {
       });
     });
   };
-
   // 이미지 삭제 핸들러
   const deleteImage = (url) => {
     listAll(imageFolderRef).then((res) => {
@@ -159,6 +95,9 @@ function MyPosts({ title, content, postId, setPost }) {
               console.log(error);
             });
         }
+      });
+    });
+  };
 
   return (
     <MyPostsContainer>
@@ -191,7 +130,6 @@ function MyPosts({ title, content, postId, setPost }) {
                 defaultValue={content}
                 onChange={onChangeEditContent}
               ></textarea>
-
               <InputAndButtonWrapper>
                 <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
                 <button onClick={uploadImage}>업로드 이미지</button>

@@ -188,11 +188,7 @@ export default function Header() {
   const [hasToken, setHasToken] = useState(false);
 
   // Styled-Components 반복 생성 시 사용하는 변수
-<<<<<<< HEAD
   const menu = ['Features', 'Pricing', 'Follow', 'Support'];
-=======
-  const menu = ['Posts', 'Products', 'Community', 'Support'];
->>>>>>> 3d1ccb52d517f797c4d4f3b366eaea73576180eb
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
@@ -203,7 +199,7 @@ export default function Header() {
       setHasToken(true);
     }
   }, [reduxUser]);
-  
+
   // FUNCTIONS
   const handleToggle = () => {
     setMenuToggle((prev) => !prev);
@@ -241,8 +237,15 @@ export default function Header() {
   };
 
   const menuNavi = (e) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    console.log(user);
+    const goLoginPage = () => {
+      alert('로그인페이지로 이동입니다.') 
+      navi('/login');
+    }
     e.target.innerText === 'Posts' && navi('/posts');
     e.target.innerText === 'Products' && navi('/shop');
+    e.target.innerText === 'Follow' && user === null ? goLoginPage() : navi('/follow');
   };
 
   // user email을 받아와 반환합니다

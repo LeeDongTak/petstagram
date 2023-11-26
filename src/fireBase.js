@@ -76,22 +76,22 @@ export const fetchSinglePost = async (postId) => {
 };
 
 
-const firebaseConfig = config.db.dbConfig;
+// const firebaseConfig = config.db.dbConfig;
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDTtTT1QXmWLAQn4wZbhFs5lSWqrnHwXU",
+  authDomain: "petstagram-c9f48.firebaseapp.com",
+  projectId: "petstagram-c9f48",
+  storageBucket: "petstagram-c9f48.appspot.com",
+  messagingSenderId: "799071390409",
+  appId: "1:799071390409:web:6d67483fad8f0a290cdb18"
+};
 
 export const app = initializeApp(firebaseConfig);
-// Your web app's Firebase configuration
 
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Initialize Firebase
-
-// Initialize FireStore
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
-export const storage = getStorage(app);
 
 // Create a storage reference from our storage service
