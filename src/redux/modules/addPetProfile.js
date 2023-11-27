@@ -1,9 +1,3 @@
-import { addDoc, collection, getDocs, query } from 'firebase/firestore';
-import { db, storage } from '../../fireBase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { v4 } from 'uuid';
-import moment from 'moment/moment';
-
 const PET_DATA_READ = 'PET_DATA_READ';
 const Add_PET_MODAL = 'Add_PET_MODAL';
 const PET_IMG_URL_CHAGE = 'PET_IMG_URL_CHAGE';

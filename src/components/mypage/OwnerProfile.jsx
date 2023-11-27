@@ -20,15 +20,12 @@ function OwnerProfile() {
           userInfo.push(data);
         });
         setUser(userInfo?.filter((el) => el.id === id));
-        console.log(userInfo); // [{}, {}, {}, {}]
       } catch (err) {
         console.log(err);
       }
     };
     fetchUser();
   }, []);
-
-  console.log(user[0]);
 
   return (
     <ProfileContainer>
@@ -44,8 +41,8 @@ function OwnerProfile() {
       <InterestedInWrapper>
         <h3>관심사</h3>
         <InterestedIn>
-          {user[0]?.profileInterests.map((el) => {
-            return <span>#{el}</span>;
+          {user[0]?.profileInterests.map((el, i) => {
+            return <span key={i}>#{el}</span>;
           })}
         </InterestedIn>
       </InterestedInWrapper>

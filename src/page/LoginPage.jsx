@@ -70,16 +70,41 @@ function LoginPage() {
           imageWidth: 120
         }).then((value) => {
           console.log(value);
-          if (value.isConfirmed === true) {
-            const user = {
-              uid: 유저인증토큰객체.user.uid,
-              email: 유저인증토큰객체.user.email,
-              token: 유저인증토큰객체.user.accessToken
-            };
-            dispatch(add_user(user));
-            localStorage.setItem('user', JSON.stringify(user));
-            navi('/');
-          }
+
+          const fetchData = async () => {
+            const querySnapshot = await getDocs(query(collection(db, 'users')));
+            const initialPets = [];
+            querySnapshot.forEach((doc) => {
+              initialPets.push({ uid: doc.id, ...doc.data() });
+            });
+            const filterData = initialPets.filter((x) => x.uid === 유저인증토큰객체.user.uid);
+
+            if (value.isConfirmed === true) {
+              const user = {
+                uid: 유저인증토큰객체.user.uid,
+                email: 유저인증토큰객체.user.email,
+                token: 유저인증토큰객체.user.accessToken
+              };
+              dispatch(add_user(user));
+              localStorage.setItem('user', JSON.stringify(user));
+              navi('/');
+
+              if (filterData.length === 0) {
+                Swal.fire({
+                  html: '<p style="font-size: 14px;">프로필 등록페이지로 이동합니다.</p>',
+                  confirmButtonText: '확인',
+                  confirmButtonColor: '#FF5036',
+                  width: '28rem',
+                  imageUrl: '/assets/img/logo.png',
+                  imageWidth: 120
+                });
+                navi(`/addprofile/${유저인증토큰객체.user.uid}`);
+              } else {
+                navi(`/`);
+              }
+            }
+          };
+          fetchData();
         });
       })
 

@@ -5,7 +5,7 @@ import PetProfile from '../Addporfile/PetProfile';
 import PetAdd from '../Addporfile/PetAdd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { profileAddCommit, profileEditCommit } from '../../redux/modules/addProfile';
+import { profileEditCommit } from '../../redux/modules/addProfile';
 
 function EditProfile() {
   const addPetProfile = useSelector((state) => state.addPetProfile);

@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { v4 } from 'uuid';
 import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebase/storage';
-import { doc, deleteDoc, updateDoc, documentId } from 'firebase/firestore';
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import PostImages from './PostImages';
 import parse from 'html-react-parser';
-import HTMLReactParser from 'html-react-parser';
+import { FadeAni } from '../../page/MyPage';
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);
@@ -101,8 +101,6 @@ function MyPosts({ title, content, postId, setPost }) {
     });
   };
 
-  console.log(parse(content).props?.children);
-
   return (
     <MyPostsContainer>
       {!isEditing ? (
@@ -131,8 +129,7 @@ function MyPosts({ title, content, postId, setPost }) {
                 id=""
                 cols="30"
                 rows="10"
-                placeholder={parse(content).props?.children}
-                defaultValue={parse(content)}
+                defaultValue={content?.replace(/["]+/g, '').replace(/<[^>]*>/g, '')}
                 onChange={onChangeEditContent}
               ></textarea>
               <InputAndButtonWrapper>

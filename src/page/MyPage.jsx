@@ -6,7 +6,7 @@ import MyPosts from '../components/mypage/MyPosts';
 import { useEffect } from 'react';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../fireBase';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import authStorage from '../util/authUser';
 
@@ -17,11 +17,10 @@ function MyPage() {
   // URL 파라미터
   const { id } = useParams();
 
-  const navi = useNavigate();
-
   // STATES
   const [post, setPost] = useState([]);
   const [userName, setUserName] = useState('');
+  const [pets, setPets] = useState([]);
 
   // Tab 변하는 부분
   const [activeTab, setActiveTab] = useState('프로필');
@@ -43,19 +42,33 @@ function MyPage() {
           initialPosts.push(data);
         });
         setPost(initialPosts?.filter((el) => el.uid === id));
-        console.log(initialPosts); // [{}, {}, {}, {}]
       } catch (err) {
         console.log(err);
       }
     };
+    const user = async () => {
+      try {
+        const q = query(collection(db, 'myPet'));
+        const querySnapshot = await getDocs(q);
+        const initialPets = [];
+        querySnapshot.forEach((pet) => {
+          const data = { id: pet.id, ...pet.data() };
+          initialPets.push(data);
+        });
+        let resultPet = initialPets?.filter((el) => el.masterId === id);
+
+        setPets(resultPet);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    user();
     fetchData();
   }, []);
-  console.log(post);
 
   // 현재 사용자의 게시물 필터
   const filteredData = post.filter((post) => post.uid === id);
 
-  console.log(filteredData); // []
   //사용자의 정보를 받는 useEffect
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -73,7 +86,9 @@ function MyPage() {
         <ProfileContainer>
           <OwnerProfile></OwnerProfile>
           <PetProfileContainer>
-            <PetProfile></PetProfile>
+            {pets.map((item, i) => {
+              return <PetProfile key={item.id} petData={item}></PetProfile>;
+            })}
           </PetProfileContainer>
         </ProfileContainer>
       ) : (
@@ -96,24 +111,6 @@ function MyPage() {
 }
 
 export default MyPage;
-
-const MyPageContainer = styled.div`
-  font-size: 1.25rem;
-  width: 100%;
-  max-width: 1800px;
-  height: 100%;
-  padding: 1rem 21rem 9rem 21rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  @media screen and (max-width: 1400px) {
-    padding: 0 6rem;
-  }
-  @media screen and (max-width: 768px) {
-    padding: 0 1.25rem;
-  }
-`;
 
 export const FadeAni = keyframes`
   from {

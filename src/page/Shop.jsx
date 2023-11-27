@@ -13,7 +13,6 @@ function Shop() {
       setProducts(response.data.products);
     });
   }, [setProducts]);
-  console.log(products);
 
   return (
     <Wrap>
@@ -102,7 +101,6 @@ const ProductTitle = styled.div`
 //가격 랩
 const PriceWrap = styled.div`
   display: flex;
-  space-between: 10px;
 `;
 
 //할인 가격

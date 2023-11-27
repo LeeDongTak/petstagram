@@ -10,6 +10,7 @@ import Signup from '../page/Signup';
 import AddProfile from '../page/AddProfile';
 import WritePage from '../page/WritePage';
 import Feeds from '../page/Feeds';
+import Follow from '../page/Follow';
 import GlobalStyle from '../styled/GlobalStyle';
 import MainDetail from '../components/MainDetail/MainDetail';
 import ProductDetail from '../components/ProductDetail/ProductDetail';
@@ -31,6 +32,7 @@ function Router() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/shop/:id" element={<ProductDetail />} />
         <Route path="/posts" element={<Feeds />} />
+        <Route path="/follow" element={<Follow />} />
         <Route path="/maindetail" element={<MainDetail />} />
         <Route path="/edit-profile/:id" element={<EditProfile />} />
         <Route path="/post/:id" element={<Post />} />

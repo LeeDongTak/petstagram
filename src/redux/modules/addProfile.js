@@ -1,7 +1,6 @@
-import { addDoc, collection, setDoc, doc, updateDoc } from 'firebase/firestore';
+import { setDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../../fireBase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { v4 } from 'uuid';
 import moment from 'moment/moment';
 
 const PROFILE_IMG_URL_CHAGE = 'PROFILE_IMG_URL_CHAGE';
@@ -94,7 +93,8 @@ const initialState = {
   profileInterestsMsg: '', // 프로필 관심사 에러 메시지
   profileNameMsg: '', // 프로필 이름 에러 메시지
   profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
-  profileimgMsg: '' // 프로필 관심사 이미지 메시지
+  profileimgMsg: '', // 프로필 관심사 이미지 메시지
+  follower: [] // 팔로워
 };
 
 const addprofile = (state = initialState, action) => {

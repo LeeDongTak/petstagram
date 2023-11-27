@@ -28,16 +28,6 @@ const BackBtn = styled.button`
 function PostDetail() {
   const navigate = useNavigate();
   const { postId } = useParams();
-  const deletePost = async () => {
-    try {
-      await fetch(`/api/posts/${postId}`, { method: 'DELETE' });
-      navigate('/posts');
-    } catch (error) {
-      console.error('실패', error);
-    }
-  };
-
-  console.log(postId);
 
   return (
     <Container>

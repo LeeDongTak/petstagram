@@ -1,8 +1,4 @@
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../fireBase';
-
 // Action Type
-const DELETE_POST = 'DELETE_POST';
 const ON_CHANGE_EDIT_CONTENT = 'ON_CHANGE_EDIT_CONTENT';
 
 // Action Creator

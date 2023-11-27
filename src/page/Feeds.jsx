@@ -1,11 +1,9 @@
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { FadeAni } from './MyPage';
-import { db, fetchData } from '../fireBase';
-import { addPost } from '../redux/modules/posts';
+import { db } from '../fireBase';
 import parse from 'html-react-parser';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -90,16 +88,23 @@ const PostImg = styled.img`
   background-image: ${(props) => `url(${props.$img})`};
   background-position: center;
   background-size: cover;
+  border: 1px solid #d7d7d7;
 `;
 
 const PostContentSection = styled.div`
   width: 100%;
-  height: 100px;
-  overflow: scroll;
+  height: 150px;
   padding: 1rem;
+  line-height: 1.2;
+  font-size: 1.25rem;
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 13;
 `;
 
-const PostTitle = styled.h3`
+const PostTitle = styled.div`
   width: 100%;
   margin-block: 0.5rem;
   font-size: 1.25rem;
@@ -127,7 +132,7 @@ const PostInfo = styled.div`
   padding: 1rem;
 `;
 
-const UserInfo = styled.h5`
+const UserInfo = styled.div`
   width: fit-content;
 `;
 
@@ -158,7 +163,6 @@ export default function Feeds() {
           initialPosts.push(data);
         });
         setFeeds(initialPosts);
-        console.log(initialPosts);
       } catch (err) {
         console.log(err);
       }
@@ -174,8 +178,6 @@ export default function Feeds() {
     e.stopPropagation();
     navi(`/post/${e.target.id}`);
   };
-
-  console.log(feeds);
 
   const pattern = /https?:\/\/firebasestorage\.googleapis\.com[^\s"]+/;
 

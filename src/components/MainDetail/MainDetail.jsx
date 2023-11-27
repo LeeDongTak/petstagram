@@ -36,8 +36,6 @@ function MainDetail() {
 
   const pattern = /https?:\/\/firebasestorage\.googleapis\.com[^\s"]+/;
 
-  console.log(posts);
-
   return (
     <>
       <MyPostsContainer>
@@ -54,15 +52,15 @@ function MainDetail() {
               )}
             </PostImageContainer>
             <PostInfo id={post.cid} onClick={goDetail}>
-              <p id={post.cid} onClick={goDetail}>
+              <div id={post.cid} onClick={goDetail}>
                 {post.user}
-              </p>
+              </div>
               <Title id={post.cid} onClick={goDetail}>
                 {post.title}
               </Title>
-              <p id={post.cid} onClick={goDetail}>
+              <div id={post.cid} onClick={goDetail}>
                 {parse(post.content)}
-              </p>
+              </div>
             </PostInfo>
           </MyPostCard>
         ))}
@@ -91,6 +89,7 @@ const MyPostsContainer = styled.div`
 
 const MyPostCard = styled.div`
   display: flex;
+
   gap: 20px;
   padding: 20px 0;
   border-bottom: 1px solid #c7c7c7a2;

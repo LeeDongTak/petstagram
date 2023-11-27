@@ -23,9 +23,8 @@ import {
 } from '../../redux/modules/addPetProfile';
 import { useParams } from 'react-router-dom';
 import { db, storage } from '../../fireBase';
-import { getDoc, addDoc, collection, getDocs, query } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { v4 } from 'uuid';
 import moment from 'moment/moment';
 
 function PetAdd() {

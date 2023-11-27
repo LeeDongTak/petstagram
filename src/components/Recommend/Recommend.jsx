@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import RecommendGrid from '../RecommendGrid/RecommendGrid';
-import { db, fetchData } from '../../fireBase';
+import { db } from '../../fireBase';
 import { collection, getDocs } from 'firebase/firestore';
 import { addPost } from '../../redux/modules/posts';
 
@@ -58,21 +58,6 @@ export default function Recommend() {
     };
     fetchData();
   }, []);
-
-  // Variables
-  // - RecommendGrid 컴포넌트로 전달해줍니다.
-  // - 데이터의 categoryCode 값에 따라 filter가 됩니다.
-
-  // UI 생성 시 필요한 데이터를 추가하기 위함 (사용 안 함)
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     const querySnapshot = await getDocs(collection(db, 'posts'));
-  //     querySnapshot.forEach((doc) => {
-  //       console.log(doc.data());
-  //     });
-  //   };
-  //   fetchPosts();
-  // }, []);
 
   return (
     <RecommendSection>

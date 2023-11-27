@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { remove_user } from '../../redux/modules/users';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faClose } from '@fortawesome/free-solid-svg-icons';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { db } from '../../fireBase';
 
 // Styled-Components
 const HeaderContainer = styled.div`
@@ -194,19 +196,31 @@ export default function Header() {
   // Token을 가졌나 안 가졌나 확인
   const [hasToken, setHasToken] = useState(false);
 
+  // follow버튼클릭을 위한 userid
+  const [users, setUsers] = useState([]);
+
   // Styled-Components 반복 생성 시 사용하는 변수
-  const menu = ['Posts', 'Products', 'Community', 'Support'];
+  const menu = ['Posts', 'Products', 'Follow', 'Support'];
   const buttons = ['Log in', 'Register'];
   const loginedButton = ['Log Out'];
 
   // 초기 렌더 시 localStoragedp user데이터를 ref에 담아 로그인 유저 정보 유지
   useEffect(() => {
+    const userdata = async () => {
+      const q = query(collection(db, 'users'));
+      const querySnapshot = await getDocs(q);
+      const initialUsers = [];
+      querySnapshot.forEach((doc) => {
+        initialUsers.push(doc.id);
+      });
+      setUsers(initialUsers);
+    };
+    userdata();
     if (localStorage.getItem('user') !== null) {
       curUserInfo.current = JSON.parse(localStorage.getItem('user'));
       setHasToken(true);
     }
   }, [reduxUser]);
-
   // FUNCTIONS
   const handleToggle = () => {
     setMenuToggle((prev) => !prev);
@@ -223,6 +237,7 @@ export default function Header() {
   // 글 작성 페이지로
   const goWrite = () => {
     navi('/write');
+    setMenuToggle(false);
   };
 
   // 로그아웃_localStorage의 정보를 비우고, 페이지를 새로고침 합니다.
@@ -239,7 +254,6 @@ export default function Header() {
   const goMyPage = () => {
     const uid = JSON.parse(localStorage.getItem('user'))?.uid;
     navi(`/mypage/${uid}`);
-    setMenuToggle(false);
   };
 
   // 홈으로~
@@ -249,8 +263,21 @@ export default function Header() {
   };
 
   const menuNavi = (e) => {
+    const user = JSON.parse(localStorage.getItem('user'));
     e.target.innerText === 'Posts' && navi('/posts');
     e.target.innerText === 'Products' && navi('/shop');
+    if (e.target.innerText === 'Follow') {
+      if (user === null) {
+        alert('로그인페이지로 이동입니다.');
+        navi('/login');
+      } else if (!users.includes(user.uid)) {
+        alert('프로필 등록페이지로 이동입니다.');
+        navi(`/addprofile/${user.uid}`);
+      } else {
+        navi('/follow');
+      }
+    }
+    setMenuToggle(false);
   };
 
   // user email을 받아와 반환합니다

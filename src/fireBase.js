@@ -57,17 +57,12 @@ const readFileAsDataURL = (file) => {
 };
 
 
-const firebaseConfig = config.db.dbConfig;
+// const firebaseConfig = config.db.dbConfig;
+
+const firebaseConfig = config.db.dbConfig
 
 export const app = initializeApp(firebaseConfig);
-// Your web app's Firebase configuration
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Initialize Firebase
-
-// Initialize FireStore
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { fetchData } from '../fireBase';
 import EditorBox from './Editor';
 

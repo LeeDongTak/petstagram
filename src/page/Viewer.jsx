@@ -3,6 +3,7 @@ import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Viewer } from '@toast-ui/react-editor';
 import { fetchData } from '../fireBase';
 import styled from 'styled-components';
+
 const EditContainer = styled.div`
   /* 에디터 부분 전부 감싸는 박스 */
   padding: 10px;

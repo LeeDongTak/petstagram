@@ -12,7 +12,7 @@ function Tabs({ onClickTab, activeTab }) {
   };
   return (
     <TabWrapper>
-      <TabContainer onClick={onClickTab} r>
+      <TabContainer onClick={onClickTab}>
         <TabList $activeTab={activeTab}>프로필</TabList>
         <TabList $activeTab={activeTab}>내 게시글</TabList>
       </TabContainer>

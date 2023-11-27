@@ -18,8 +18,6 @@ function Footer() {
     };
   }, []);
 
-  console.log(footerView);
-
   return (
     <>
       <Footerstyle $footerview={footerView}>

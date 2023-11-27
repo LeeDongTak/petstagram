@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { addPetModal } from '../../redux/modules/addPetProfile';
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../fireBase';
 import { useParams } from 'react-router-dom';
-import { pedtDataRead, petDataUpdate } from '../../redux/modules/addPetProfile';
+import { pedtDataRead } from '../../redux/modules/addPetProfile';
 import PetCard from './PetCard';
 
 function PetProfile() {
   const addPetProfile = useSelector((state) => state.addPetProfile);
-  const [resultData, setResultData] = useState([]);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -29,13 +28,11 @@ function PetProfile() {
     });
     const filterData = initialPets.filter((x) => x.masterId === id);
     dispatch(pedtDataRead(filterData));
-    console.log(filterData);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(addPetProfile.petData);
 
   return (
     <>
@@ -45,7 +42,7 @@ function PetProfile() {
       </StPetPorfileWrap>
       <StPetCardWarp>
         {addPetProfile?.petData?.map((item, index) => {
-          return <PetCard petData={item} index={index} key={item.petId} />;
+          return <PetCard petData={item} index={index} key={item.id} />;
         })}
       </StPetCardWarp>
     </>
