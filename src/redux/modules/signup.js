@@ -37,7 +37,8 @@ const initialState = {
   passwordCheck: '',
   emailErrMsg: '',
   passwordErrMsg: '',
-  passwordCheckErrMsg: ''
+  passwordCheckErrMsg: '',
+  follower: []
 };
 
 const signup = (state = initialState, action) => {
@@ -112,7 +113,8 @@ const signup = (state = initialState, action) => {
           passwordCheck: '',
           emailErrMsg: '',
           passwordErrMsg: '',
-          passwordCheckErrMsg: ''
+          passwordCheckErrMsg: '',
+          follower: []
         };
       }
     default:

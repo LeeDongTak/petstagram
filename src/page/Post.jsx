@@ -50,7 +50,6 @@ export default function Post() {
           initialPosts.push(data);
         });
         setContent(initialPosts.filter((el) => el.cid === id));
-        console.log(initialPosts);
       } catch (err) {
         console.log(err);
       }

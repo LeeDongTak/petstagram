@@ -57,7 +57,6 @@ function LoginPage() {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((유저인증토큰객체) => {
-        console.log(유저인증토큰객체);
         setEmail('');
         setPassword('');
         Swal.fire({
@@ -69,8 +68,6 @@ function LoginPage() {
           imageUrl: '/assets/img/logo.png',
           imageWidth: 120
         }).then((value) => {
-          console.log(value);
-
           const fetchData = async () => {
             const querySnapshot = await getDocs(query(collection(db, 'users')));
             const initialPets = [];

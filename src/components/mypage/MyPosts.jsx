@@ -6,7 +6,6 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import PostImages from './PostImages';
 import parse from 'html-react-parser';
-import { FadeAni } from '../../page/MyPage';
 
 function MyPosts({ title, content, postId, setPost }) {
   const [isEditing, setIsEditig] = useState(false);

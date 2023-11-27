@@ -357,7 +357,8 @@ const addprofile = (state = initialState, action) => {
           profileInterestsMsg: '', // 프로필 관심사 에러 메시지
           profileNameMsg: '', // 프로필 이름 에러 메시지
           profileIntroductionMsg: '', // 프로필 한줄소개 에러 메시지
-          profileimgMsg: '' // 프로필 관심사 이미지 메시지
+          profileimgMsg: '', // 프로필 관심사 이미지 메시지
+          follower: []
         };
       }
 

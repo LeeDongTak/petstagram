@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { FadeAni } from './MyPage';
 import { db } from '../fireBase';
 import Swal from 'sweetalert2';
 import { updateDoc, getDocs, getDoc, doc, collection } from 'firebase/firestore';
@@ -195,7 +194,7 @@ export default function Follow() {
         const user = JSON.parse(localStorage.getItem('user'));
         const snapshot = await getDoc(doc(db, 'users', user.uid));
         let result = { id: snapshot.id, ...snapshot.data() };
-        setUserInfo(result);
+        setUserInfo({ ...userInfo, ...result });
       } catch (error) {
         console.log(error);
       }
@@ -210,17 +209,22 @@ export default function Follow() {
     const followRef = doc(db, 'users', userInfo?.id);
     const addfollow = userInfo?.follower;
     addfollow?.unshift(fol);
-    await updateDoc(followRef, { ...userInfo, follower: addfollow });
-    Swal.fire({
-      title: '<span style="font-size: 22px;">팔로우 완료!</span>',
-      html: `<p style="font-size: 14px;">${userInfo.profilename}님에게 팔로우 하였습니다.</p>`,
-      confirmButtonText: '확인',
-      confirmButtonColor: '#FF5036',
-      width: '28rem',
-      imageUrl: '/assets/img/logo.png',
-      imageWidth: 120
-    });
-    setUserInfo({ ...follow, follower: addfollow });
+    await updateDoc(followRef, { ...userInfo, follower: addfollow })
+      .then(() => {
+        Swal.fire({
+          title: '<span style="font-size: 22px;">팔로우 완료!</span>',
+          html: `<p style="font-size: 14px;">${userInfo.profilename}님에게 팔로우 하였습니다.</p>`,
+          confirmButtonText: '확인',
+          confirmButtonColor: '#FF5036',
+          width: '28rem',
+          imageUrl: '/assets/img/logo.png',
+          imageWidth: 120
+        });
+        setUserInfo({ ...userInfo, follower: addfollow });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

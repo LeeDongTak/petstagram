@@ -267,15 +267,25 @@ export default function Header() {
     e.target.innerText === 'Posts' && navi('/posts');
     e.target.innerText === 'Products' && navi('/shop');
     if (e.target.innerText === 'Follow') {
-      if (user === null) {
-        alert('로그인페이지로 이동입니다.');
-        navi('/login');
-      } else if (!users.includes(user.uid)) {
-        alert('프로필 등록페이지로 이동입니다.');
-        navi(`/addprofile/${user.uid}`);
-      } else {
-        navi('/follow');
-      }
+      const userdata = async () => {
+        const q = query(collection(db, 'users'));
+        const querySnapshot = await getDocs(q);
+        const initialUsers = [];
+        querySnapshot.forEach((doc) => {
+          initialUsers.push(doc.id);
+        });
+        setUsers(initialUsers);
+        if (user === null) {
+          alert('로그인페이지로 이동입니다.');
+          navi('/login');
+        } else if (!initialUsers.includes(user.uid)) {
+          alert('프로필 등록페이지로 이동입니다.');
+          navi(`/addprofile/${user.uid}`);
+        } else {
+          navi('/follow');
+        }
+      };
+      userdata();
     }
     setMenuToggle(false);
   };
